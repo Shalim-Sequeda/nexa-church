@@ -1,0 +1,75 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "productName": "NEXA Church",
+  "version": "2.0.0",
+  "identifier": "com.shalimtechnologies.nexachurch",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "NEXA Church — Control Room",
+        "width": 1280,
+        "height": 800,
+        "minWidth": 1024,
+        "minHeight": 650,
+        "resizable": true,
+        "decorations": false,
+        "center": true,
+        "maximized": true,
+        "dragDropEnabled": true,
+        "backgroundColor": "#000000"
+      },
+      {
+        "label": "presentation",
+        "title": "NEXA Church — Presentation",
+        "url": "index.html?window=presentation",
+        "width": 1280,
+        "height": 720,
+        "minWidth": 640,
+        "minHeight": 360,
+        "resizable": true,
+        "decorations": false,
+        "center": true,
+        "visible": false,
+        "backgroundColor": "#000000"
+      }
+    ],
+    "security": {
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["**"]
+      },
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; media-src 'self' asset: http://asset.localhost https://asset.localhost blob: data:; img-src 'self' asset: http://asset.localhost https://asset.localhost blob: data:;"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "resources": [
+      "bundled_bibles/*"
+    ],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "publisher": "SHALIM TECHNOLOGIES",
+    "copyright": "© 2026 SHALIM TECHNOLOGIES",
+    "windows": {
+      "nsis": {
+        "installerIcon": "icons/icon.ico",
+        "installMode": "currentUser",
+        "languages": ["Spanish", "English"],
+        "displayLanguageSelector": false
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+# Node dependencies
+node_modules/
+package-lock.json
+
+# Local media & tracks (heavy files not for git)
+Pista/
+Biblias/
+
+# Build outputs
+dist/
+build/
+.output/
+
+# Rust / Tauri build artifacts
+src-tauri/target/
+src-tauri/gen/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Test outputs & scripts scratch
+test-bench*
+test-*.png
+landing/assets/*test*.png
+landing/assets/*preview*.png
+landing/assets/*scroll*.png
+landing/assets/sec*-*.png

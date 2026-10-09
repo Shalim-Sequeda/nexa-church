@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manual de Usuario Oficial — NEXA Church</title>
+  <meta name="description" content="Guía completa y manual de usuario oficial de NEXA Church. Aprende a operar el motor bíblico, canciones, cues, stage display y streaming." />
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            nexaRed: {
+              DEFAULT: '#FF1E2D',
+              hover: '#E01524',
+              glow: 'rgba(255, 30, 45, 0.4)',
+            },
+            nexaDark: {
+              base: '#050505',
+              card: '#0D0E12',
+              border: 'rgba(255, 255, 255, 0.08)',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #060709;
+      color: #D1D5DB;
+      font-family: 'Inter', sans-serif;
+    }
+    .prose-nexa h2 {
+      scroll-margin-top: 100px;
+    }
+    .prose-nexa h3 {
+      scroll-margin-top: 90px;
+    }
+    kbd {
+      background-color: #1A1C23;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 4px;
+      box-shadow: 0 1px 1px rgba(0,0,0,0.5);
+      color: #FFFFFF;
+      font-family: monospace;
+      font-size: 0.8em;
+      padding: 0.15em 0.45em;
+    }
+    @media print {
+      header, aside, .no-print {
+        display: none !important;
+      }
+      body {
+        background: #FFFFFF !important;
+        color: #000000 !important;
+      }
+      .print-full {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .card-border {
+        border: 1px solid #CCCCCC !important;
+        background: #F9FAFB !important;
+        color: #111111 !important;
+      }
+      h1, h2, h3, h4 {
+        color: #000000 !important;
+      }
+      p, li, span, td {
+        color: #222222 !important;
+      }
+    }
+  </style>
+</head>
+<body class="selection:bg-[#FF1E2D] selection:text-white antialiased">
+
+  <!-- ====================================================
+       TOP NAVIGATION BAR
+  ==================================================== -->
+  <header class="sticky top-0 z-50 bg-[#060709]/90 backdrop-blur-md border-b border-white/[0.08]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand & Back Link -->
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="flex items-center gap-2.5 group">
+          <img src="assets/logo.png" alt="NEXA Church" class="w-8 h-8 rounded-lg object-contain transition-transform group-hover:scale-105" />
+          <div class="flex items-baseline select-none">
+            <span class="text-base font-extrabold tracking-tight text-white font-sans">NEXA</span>
+            <span class="text-base font-light text-neutral-300 ml-1 tracking-wider font-sans">CHURCH</span>
+          </div>
+        </a>
+        <span class="text-neutral-700 hidden sm:inline">|</span>
+        <span class="text-xs font-semibold uppercase tracking-wider text-neutral-400 hidden sm:inline">
+          Manual de Usuario Oficial
+        </span>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-3">
+        <button 
+          onclick="window.print()" 
+          class="no-print inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#141519] hover:bg-[#1D1F25] text-neutral-300 hover:text-white border border-white/10 text-xs font-medium transition-all"
+          title="Imprimir o guardar en PDF"
+        >
+          <i class="ph ph-printer text-base"></i>
+          <span class="hidden sm:inline">Imprimir / Guardar PDF</span>
+        </button>
+
+        <a 
+          href="downloads/NEXA_Church_Installer.exe" 
+          download="NEXA_Church_Installer.exe"
+          class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#FF1E2D] hover:bg-[#E01524] text-white text-xs font-semibold transition-all shadow-md shadow-red-950/40"
+        >
+          <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M7.5 10.5L12 15m0 0l4.5-4.5M12 15V3" />
+          </svg>
+          <span class="hidden sm:inline">Descargar Software</span>
+          <span class="sm:hidden">Descargar</span>
+        </a>
+
+        <a 
+          href="index.html" 
+          class="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-white transition-colors ml-1"
+        >
+          <i class="ph ph-arrow-left text-sm"></i>
+          <span class="hidden md:inline">Volver a la web</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ====================================================
+       MANUAL CONTAINER WITH SIDEBAR & CONTENT
+  ==================================================== -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+      
+      <!-- ====================================================
+           LEFT SIDEBAR: TABLA DE CONTENIDO (STICKY)
+      ==================================================== -->
+      <aside class="no-print lg:col-span-3 lg:sticky lg:top-24 bg-[#0A0B0E] border border-white/[0.08] rounded-xl p-5 max-h-[calc(100vh-120px)] overflow-y-auto space-y-4">
+        <div class="flex items-center gap-2 text-white font-bold text-sm tracking-tight border-b border-white/[0.08] pb-3">
+          <i class="ph ph-list-dashes text-lg text-[#FF1E2D]"></i>
+          <span>Índice del Manual</span>
+        </div>
+
+        <nav class="space-y-1 text-xs">
+          <a href="#introduccion" class="block py-1.5 px-2 rounded text-neutral-300 hover:text-white hover:bg-white/[0.05] transition-colors">
+            1. Introducción y Requisitos
+          </a>
+          <a href="#instalacion" class="block py-1.5 px-2 rounded text-neutral-300 hover:text-white hover:bg-white/[0.05] transition-colors">
+            2. Instalación y Primer Inicio
+          </a>
+          <a href="#interfaz" class="block py-1.5 px-2 rounded text-neutral-300 hover:text-white hover:bg-white/[0.05] transition-colors">
+            3. Interfaz y Flujo Preview / Live
+          </a>
+          <a href="#motor-biblico" class="block py-1.5 px-2 rounded text-neutral-300 hover:text-white hover:bg-white/[0.05] transition-colors">
+            4. Motor Bíblico y Versículos
+          </a>
+          <a href="#canciones" class="block py-1.5 px-2 rounded text-neutral-300 hover:text-white hover:bg-white/[0.05] transition-colors">
+            5. Alabanzas, Letras y Acordes
+          </a>
+          <a href="#control-room" class="block py-1.5 px-2 rounded text-neutral-300 hover:text-white hover:bg-white/[0.05] transition-colors">
+            6. Orden de Culto y Cues
+          </a>
+          <a href="#multimedia" class="block py-1.5 px-2 rounded text-neutral-300 hover:text-white hover:bg-white/[0.05] transition-colors">
+            7. Multimedia y Motion Loops
+          </a>
+          <a href="#stage-display" class="block py-1.5 px-2 rounded text-neutral-300 hover:text-white hover:bg-white/[0.05] transition-colors">
+            8. Stage Display (Retorno de Altar)
+          </a>
+          <a href="#streaming" class="block py-1.5 px-2 rounded text-neutral-300 hover:text-white hover:bg-white/[0.05] transition-colors">
+            9. Integración con OBS / vMix
+          </a>
+          <a href="#anuncios" class="block py-1.5 px-2 rounded text-neutral-300 hover:text-white hover:bg-white/[0.05] transition-colors">
+            10. Anuncios y Placas de Culto
+          </a>
+          <a href="#atajos" class="block py-1.5 px-2 rounded text-neutral-300 hover:text-white hover:bg-white/[0.05] transition-colors font-medium text-[#FF1E2D]">
+            11. Atajos de Teclado (Cheat Sheet)
+          </a>
+          <a href="#solucion-problemas" class="block py-1.5 px-2 rounded text-neutral-300 hover:text-white hover:bg-white/[0.05] transition-colors">
+            12. Solución de Problemas y Buenas Prácticas
+          </a>
+        </nav>
+
+        <div class="pt-3 border-t border-white/[0.08]">
+          <div class="text-[11px] text-neutral-500">
+            Versión 1.0.0 Oficial<br>
+            Soporte: Shalim Technologies
+          </div>
+        </div>
+      </aside>
+
+      <!-- ====================================================
+           MAIN CONTENT: DOCUMENTACIÓN DETALLADA
+      ==================================================== -->
+      <main class="lg:col-span-9 space-y-12 prose-nexa print-full">
+        
+        <!-- Header Hero -->
+        <div class="border-b border-white/[0.08] pb-8">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-600/10 border border-red-500/20 text-[#FF1E2D] text-xs font-semibold mb-3">
+            <i class="ph ph-book-open"></i>
+            <span>DOCUMENTACIÓN OFICIAL</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            Manual de Usuario de NEXA Church
+          </h1>
+          <p class="text-base sm:text-lg text-neutral-300 mt-3 max-w-3xl leading-relaxed">
+            Aprende a dominar todas las herramientas de NEXA Church: desde la configuración de pantallas múltiples hasta la proyección bíblica instantánea, alabanzas con acordes, temporizadores de escenario y transmisión en vivo.
+          </p>
+        </div>
+
+        <!-- 1. INTRODUCCIÓN Y REQUISITOS -->
+        <section id="introduccion" class="space-y-4">
+          <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+            <span class="text-[#FF1E2D]">01.</span> Introducción y Requisitos del Sistema
+          </h2>
+          <p class="leading-relaxed">
+            <strong>NEXA Church</strong> es una estación de trabajo de presentación profesional diseñada específicamente para servicios religiosos, congresos y transmisiones en vivo. A diferencia de programas genéricos o herramientas basadas en navegador, NEXA Church funciona de manera <strong>100% local (offline)</strong>, garantizando que el culto nunca se interrumpa por caídas de internet.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08] card-border">
+              <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                <i class="ph ph-check-circle text-[#FF1E2D]"></i>
+                Requisitos Mínimos
+              </h3>
+              <ul class="text-xs space-y-1.5 text-neutral-300">
+                <li>• Sistema Operativo: Windows 10 (64-bit) o Windows 11.</li>
+                <li>• Procesador: Intel Core i3 (4ta gen) / AMD Ryzen 3 o superior.</li>
+                <li>• Memoria RAM: 4 GB.</li>
+                <li>• Almacenamiento: 500 MB libres en disco.</li>
+                <li>• Puertos de video: 1 salida HDMI/DisplayPort para pantalla externa.</li>
+              </ul>
+            </div>
+
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08] card-border">
+              <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                <i class="ph ph-star text-[#FF1E2D]"></i>
+                Requisitos Recomendados
+              </h3>
+              <ul class="text-xs space-y-1.5 text-neutral-300">
+                <li>• Procesador: Intel Core i5 / AMD Ryzen 5 o superior.</li>
+                <li>• Memoria RAM: 8 GB o superior.</li>
+                <li>• Tarjeta gráfica dedicada o integrada con soporte DirectX 11.</li>
+                <li>• 2 salidas de video para proyector y monitor de retorno (Stage Display).</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. INSTALACIÓN Y PRIMER INICIO -->
+        <section id="instalacion" class="space-y-4">
+          <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+            <span class="text-[#FF1E2D]">02.</span> Instalación y Primer Inicio
+          </h2>
+          <p class="leading-relaxed">
+            La instalación de NEXA Church es directa y no requiere bibliotecas complejas adicionales:
+          </p>
+          <ol class="list-decimal list-inside space-y-2 text-sm text-neutral-300 bg-[#0A0B0E] p-5 rounded-xl border border-white/[0.08]">
+            <li>Descarga el instalador oficial <code class="text-[#FF1E2D]">NEXA_Church_Installer.exe</code> desde la página principal.</li>
+            <li>Haz doble clic sobre el archivo ejecutable. Si Windows SmartScreen muestra un aviso, haz clic en <em>"Más información"</em> y luego en <em>"Ejecutar de todas formas"</em>.</li>
+            <li>El instalador configurará automáticamente los archivos de soporte y creará un acceso directo en el Escritorio.</li>
+            <li>Al iniciar, el software cargará automáticamente las versiones bíblicas locales, la biblioteca de alabanza y las plantillas predeterminadas en menos de 2 segundos.</li>
+          </ol>
+        </section>
+
+        <!-- 3. INTERFAZ Y FLUJO PREVIEW / LIVE -->
+        <section id="interfaz" class="space-y-4">
+          <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+            <span class="text-[#FF1E2D]">03.</span> Interfaz y Flujo de Trabajo (Preview vs. Live)
+          </h2>
+          <p class="leading-relaxed">
+            NEXA Church utiliza una arquitectura de control inspirada en los estándares de transmisión broadcast profesional. La interfaz se divide en 3 zonas principales:
+          </p>
+
+          <div class="rounded-xl overflow-hidden border border-white/10 my-4">
+            <img src="assets/sec2-screen.png" alt="Control Room de NEXA Church" class="w-full h-auto block" />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-neutral-300">
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
+              <strong class="text-white block text-sm mb-1">1. Panel de Recursos (Izquierda)</strong>
+              Permite alternar entre el Motor Bíblico, Canciones, Biblioteca Multimedia, Anuncios y Configuración.
+            </div>
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
+              <strong class="text-white block text-sm mb-1">2. Monitor PREVIEW (Centro)</strong>
+              Muestra exactamente lo que estás preparando. Nada en esta pantalla es visible por la congregación hasta que tú lo decidas.
+            </div>
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
+              <strong class="text-white block text-sm mb-1">3. Monitor LIVE (Derecha)</strong>
+              Muestra la señal exacta que está siendo proyectada en el auditorio o enviada a la transmisión en directo.
+            </div>
+          </div>
+
+          <div class="bg-[#111318] p-4 rounded-xl border border-red-500/30 flex items-start gap-3">
+            <i class="ph ph-warning-circle text-2xl text-[#FF1E2D] shrink-0 mt-0.5"></i>
+            <div class="text-xs text-neutral-300 leading-relaxed">
+              <strong class="text-white block mb-0.5">El botón fundamental: TAKE (o barra espaciadora)</strong>
+              Al hacer clic en <kbd>TAKE</kbd> o presionar la barra espaciadora, el contenido preparado en <strong>PREVIEW</strong> pasa inmediatamente a la pantalla <strong>LIVE</strong> con una transición limpia y sin parpadeos.
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. MOTOR BÍBLICO Y VERSÍCULOS -->
+        <section id="motor-biblico" class="space-y-4">
+          <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+            <span class="text-[#FF1E2D]">04.</span> Motor Bíblico y Proyección de Pasajes
+          </h2>
+          <p class="leading-relaxed">
+            Diseñado para la velocidad que requiere el momento de la predicación. Puedes encontrar cualquier versículo en menos de 3 segundos mediante búsqueda por teclado.
+          </p>
+
+          <div class="rounded-xl overflow-hidden border border-white/10 my-4">
+            <img src="assets/hero-screen.png" alt="Motor Bíblico de NEXA Church" class="w-full h-auto block" />
+          </div>
+
+          <div class="space-y-3 text-sm text-neutral-300">
+            <h3 class="text-base font-bold text-white">Pasos para proyectar un versículo:</h3>
+            <ol class="list-decimal list-inside space-y-2 bg-[#0A0B0E] p-5 rounded-xl border border-white/[0.08]">
+              <li>Haz clic en el módulo <strong>BIBLIA</strong> o presiona <kbd>F1</kbd>.</li>
+              <li>Selecciona la versión deseada: <strong>RVR1960</strong>, <strong>NVI</strong>, <strong>NTV</strong>, <strong>LBLA</strong>, <strong>TLA</strong> o <strong>DHH</strong>.</li>
+              <li>Escribe el libro (ej. <em>Salmos</em>), capítulo (ej. <em>23</em>) y versículo (ej. <em>1</em>).</li>
+              <li>Para proyectar un rango de versículos, selecciona el versículo inicial y mantén presionado <kbd>Shift</kbd> mientras seleccionas el versículo final (ej. <em>Salmos 23:1-4</em>).</li>
+              <li>Haz clic en <strong>Presentar directo a Live</strong> para emitirlo de inmediato, o <strong>A Preview</strong> si deseas verificarlo antes.</li>
+            </ol>
+          </div>
+        </section>
+
+        <!-- 5. GESTIÓN DE ALABANZAS Y LETRAS -->
+        <section id="canciones" class="space-y-4">
+          <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+            <span class="text-[#FF1E2D]">05.</span> Gestión de Alabanzas, Letras y Acordes
+          </h2>
+          <p class="leading-relaxed">
+            El motor de canciones de NEXA Church permite proyectar letras con alta legibilidad mientras los músicos pueden consultar las notas en la pantalla de retorno.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-neutral-300">
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
+              <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                <i class="ph ph-text-t text-[#FF1E2D]"></i>
+                Estructura por Secciones
+              </h3>
+              <p class="leading-relaxed">
+                Cada canción se divide automáticamente en bloques: <code>[Estrofa 1]</code>, <code>[Coro]</code>, <code>[Puente]</code>, etc. Durante la adoración, puedes saltar directamente al Coro con las flechas o haciendo clic en el bloque sin tener que pasar por toda la canción.
+              </p>
+            </div>
+
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
+              <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                <i class="ph ph-music-notes-simple text-[#FF1E2D]"></i>
+                Transposición de Acordes
+              </h3>
+              <p class="leading-relaxed">
+                Si el equipo de alabanza cambia el tono de la canción en el último minuto, utiliza el selector de tono (+1 / -1 semitonos) para transponer todas las notas instantáneamente para el Stage Display.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. ORDEN DE CULTO Y CUES -->
+        <section id="control-room" class="space-y-4">
+          <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+            <span class="text-[#FF1E2D]">06.</span> Orden de Culto y Sistema de Cues
+          </h2>
+          <p class="leading-relaxed">
+            Un <strong>Cue</strong> representa un elemento individual programado para el servicio: una canción completa, una lectura bíblica, un video de bienvenida o una placa de ofrendas.
+          </p>
+
+          <ul class="space-y-2 text-xs sm:text-sm text-neutral-300 bg-[#0A0B0E] p-5 rounded-xl border border-white/[0.08]">
+            <li class="flex items-start gap-2">
+              <i class="ph ph-plus-circle text-base text-[#FF1E2D] shrink-0 mt-0.5"></i>
+              <span><strong>Agregar a la lista:</strong> Desde cualquier módulo, haz clic en <em>"+ A Cues"</em> para añadir el elemento al orden del día.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="ph ph-arrows-down-up text-base text-[#FF1E2D] shrink-0 mt-0.5"></i>
+              <span><strong>Reordenar Cues:</strong> Arrastra y suelta (drag and drop) los elementos en la columna izquierda para organizar el orden del culto según la pauta pastoral.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="ph ph-skip-forward text-base text-[#FF1E2D] shrink-0 mt-0.5"></i>
+              <span><strong>Navegación rápida:</strong> Usa las teclas <kbd>Página Arriba</kbd> / <kbd>Página Abajo</kbd> o <kbd>→</kbd> para avanzar de diapositiva en diapositiva.</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- 7. MULTIMEDIA Y MOTION BACKGROUNDS -->
+        <section id="multimedia" class="space-y-4">
+          <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+            <span class="text-[#FF1E2D]">07.</span> Multimedia, Fondos y Control de Audio
+          </h2>
+          <p class="leading-relaxed">
+            NEXA Church permite reproducir videos en bucle continuo (motion loops) de fondo mientras el texto bíblico o la letra de alabanza se superpone limpiamente.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-neutral-300">
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
+              <strong class="text-white block text-sm mb-1">Formatos Admitidos</strong>
+              Videos: MP4, WebM (con aceleración por GPU sin caídas de framerate).<br>
+              Imágenes: PNG (con canal alfa/transparencia), JPEG, WebP.<br>
+              Audio: MP3, WAV con control de fader en decibeles.
+            </div>
+
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
+              <strong class="text-white block text-sm mb-1">Botones de Emergencia</strong>
+              <div class="space-y-1.5 pt-1">
+                <div><kbd>B</kbd> <strong>Blackout:</strong> Pone la pantalla en negro total al instante.</div>
+                <div><kbd>C</kbd> <strong>Clear:</strong> Oculta el texto inmediatamente pero conserva el fondo activo.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 8. SISTEMA DE PANTALLAS Y STAGE DISPLAY -->
+        <section id="stage-display" class="space-y-4">
+          <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+            <span class="text-[#FF1E2D]">08.</span> Configuración de Pantallas y Stage Display
+          </h2>
+          <p class="leading-relaxed">
+            El <strong>Stage Display</strong> (retorno de escenario) es una pantalla exclusiva orientada hacia el altar para pastores, líderes y músicos:
+          </p>
+
+          <div class="rounded-xl overflow-hidden border border-white/10 my-4">
+            <img src="assets/sec3-screen.png" alt="Pantalla de Retorno Stage Display en NEXA Church" class="w-full h-auto block" />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-neutral-300">
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
+              <strong class="text-white block text-sm mb-1">Reloj y Cuenta Regresiva</strong>
+              Muestra la hora actual del culto y temporizadores regresivos configurables (ej. 35 minutos de prédica) con aviso en color rojo cuando el tiempo expira.
+            </div>
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
+              <strong class="text-white block text-sm mb-1">Siguiente Línea en Espera</strong>
+              Los músicos pueden leer qué verso o estrofa viene a continuación antes de que aparezca en el proyector de la iglesia.
+            </div>
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
+              <strong class="text-white block text-sm mb-1">Mensajes Privados</strong>
+              Envía avisos directos al púlpito (ej. <em>"Mover vehículo placa ABC-123"</em>) sin proyectarlo a la congregación.
+            </div>
+          </div>
+        </section>
+
+        <!-- 9. INTEGRACIÓN CON STREAMING -->
+        <section id="streaming" class="space-y-4">
+          <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+            <span class="text-[#FF1E2D]">09.</span> Integración con Streaming (OBS Studio / vMix)
+          </h2>
+          <p class="leading-relaxed">
+            NEXA Church permite enviar títulos y letras a tus programas de transmisión online sin necesidad de equipos adicionales:
+          </p>
+
+          <ol class="list-decimal list-inside space-y-2 text-xs sm:text-sm text-neutral-300 bg-[#0A0B0E] p-5 rounded-xl border border-white/[0.08]">
+            <li>Abre <strong>NEXA Church</strong> y dirígete al panel de pantallas (<kbd>F4</kbd>).</li>
+            <li>Activa la salida secundaria o la ventana dedicada de <strong>Clean Feed / OBS Output</strong>.</li>
+            <li>En <strong>OBS Studio</strong> o <strong>vMix</strong>, agrega una nueva fuente de tipo <em>"Captura de Ventana"</em> y selecciona la salida de NEXA Church.</li>
+            <li>Aplica un filtro de clave de color (Color Key / Luma Key) si deseas proyectar únicamente los textos como <em>Lower Thirds</em> (tercios inferiores) sobre la cámara en vivo.</li>
+          </ol>
+        </section>
+
+        <!-- 10. ANUNCIOS Y PLACAS DE CULTO -->
+        <section id="anuncios" class="space-y-4">
+          <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+            <span class="text-[#FF1E2D]">10.</span> Editor de Anuncios y Placas de Culto
+          </h2>
+          <p class="leading-relaxed">
+            Diseña placas informativas sobrias para los 15 minutos previos al inicio de la reunión:
+          </p>
+          <ul class="list-disc list-inside space-y-1.5 text-xs sm:text-sm text-neutral-300 bg-[#0A0B0E] p-5 rounded-xl border border-white/[0.08]">
+            <li>Horarios de grupos pequeños, discipulado y reuniones de jóvenes.</li>
+            <li>Datos bancarios, códigos QR de ofrendas y sobres digitales.</li>
+            <li>Tarjetas de bienvenida a visitantes con información de contacto de la congregación.</li>
+            <li>Activación de carrusel rotativo con intervalo configurable (ej. cada 8 segundos).</li>
+          </ul>
+        </section>
+
+        <!-- 11. ATAJOS DE TECLADO (CHEAT SHEET) -->
+        <section id="atajos" class="space-y-4">
+          <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+            <span class="text-[#FF1E2D]">11.</span> Tabla de Atajos de Teclado (Cheat Sheet)
+          </h2>
+          <p class="leading-relaxed">
+            Memoriza estos atajos para operar NEXA Church como un profesional durante momentos intensos de alabanza y predicación:
+          </p>
+
+          <div class="overflow-x-auto rounded-xl border border-white/[0.08] bg-[#0A0B0E]">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-[#121318] text-white border-b border-white/10 uppercase tracking-wider text-[11px]">
+                <tr>
+                  <th class="py-3 px-4 font-semibold">Atajo</th>
+                  <th class="py-3 px-4 font-semibold">Acción</th>
+                  <th class="py-3 px-4 font-semibold">Contexto</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-white/[0.05] text-neutral-300">
+                <tr>
+                  <td class="py-2.5 px-4"><kbd>Espacio</kbd> o <kbd>Enter</kbd></td>
+                  <td class="py-2.5 px-4 font-medium text-white">Ejecutar TAKE (Preview → Live)</td>
+                  <td class="py-2.5 px-4">Global</td>
+                </tr>
+                <tr>
+                  <td class="py-2.5 px-4"><kbd>→</kbd> / <kbd>↓</kbd></td>
+                  <td class="py-2.5 px-4">Avanzar a la siguiente diapositiva / verso</td>
+                  <td class="py-2.5 px-4">Canciones / Biblia</td>
+                </tr>
+                <tr>
+                  <td class="py-2.5 px-4"><kbd>←</kbd> / <kbd>↑</kbd></td>
+                  <td class="py-2.5 px-4">Retroceder a la diapositiva anterior</td>
+                  <td class="py-2.5 px-4">Canciones / Biblia</td>
+                </tr>
+                <tr>
+                  <td class="py-2.5 px-4"><kbd>B</kbd></td>
+                  <td class="py-2.5 px-4 font-semibold text-red-400">Blackout (Pantalla Negra Inmediata)</td>
+                  <td class="py-2.5 px-4">Emergencia en vivo</td>
+                </tr>
+                <tr>
+                  <td class="py-2.5 px-4"><kbd>C</kbd></td>
+                  <td class="py-2.5 px-4 font-semibold text-yellow-400">Clear Text (Borrar texto, mantener fondo)</td>
+                  <td class="py-2.5 px-4">Oración / Ministración</td>
+                </tr>
+                <tr>
+                  <td class="py-2.5 px-4"><kbd>F1</kbd></td>
+                  <td class="py-2.5 px-4">Abrir Motor Bíblico</td>
+                  <td class="py-2.5 px-4">Navegación</td>
+                </tr>
+                <tr>
+                  <td class="py-2.5 px-4"><kbd>F2</kbd></td>
+                  <td class="py-2.5 px-4">Abrir Biblioteca de Alabanza</td>
+                  <td class="py-2.5 px-4">Navegación</td>
+                </tr>
+                <tr>
+                  <td class="py-2.5 px-4"><kbd>F3</kbd></td>
+                  <td class="py-2.5 px-4">Abrir Galería Multimedia</td>
+                  <td class="py-2.5 px-4">Navegación</td>
+                </tr>
+                <tr>
+                  <td class="py-2.5 px-4"><kbd>F4</kbd></td>
+                  <td class="py-2.5 px-4">Configurar Pantallas y Stage Display</td>
+                  <td class="py-2.5 px-4">Ajustes</td>
+                </tr>
+                <tr>
+                  <td class="py-2.5 px-4"><kbd>Esc</kbd></td>
+                  <td class="py-2.5 px-4">Cerrar modales o salir de pantalla completa</td>
+                  <td class="py-2.5 px-4">Global</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 12. SOLUCIÓN DE PROBLEMAS Y BUENAS PRÁCTICAS -->
+        <section id="solucion-problemas" class="space-y-4">
+          <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+            <span class="text-[#FF1E2D]">12.</span> Solución de Problemas y Buenas Prácticas
+          </h2>
+
+          <div class="space-y-3">
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08] card-border">
+              <strong class="text-white text-sm block mb-1">¿Qué hacer si el proyector no detecta la señal?</strong>
+              <p class="text-xs text-neutral-300 leading-relaxed">
+                Presiona la combinación de Windows <kbd>Win</kbd> + <kbd>P</kbd> y selecciona la opción <strong>"Extender"</strong> (nunca "Duplicar"). Luego, en NEXA Church, abre el panel de Pantallas (<kbd>F4</kbd>) y asigna la pantalla secundaria como salida del proyector.
+              </p>
+            </div>
+
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08] card-border">
+              <strong class="text-white text-sm block mb-1">Buena práctica antes de iniciar el culto:</strong>
+              <p class="text-xs text-neutral-300 leading-relaxed">
+                Prueba con anticipación los 3 primeros cues del culto, verifica que el temporizador del altar esté reseteado y asegúrate de silenciar los sonidos de notificaciones de Windows para evitar ruidos indeseados en el sistema de sonido.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Footer Note inside Manual -->
+        <div class="pt-8 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-4">
+          <p>© 2026 NEXA Church • Desarrollado por Shalim Technologies.</p>
+          <div class="flex items-center gap-4">
+            <a href="index.html" class="hover:text-white transition-colors">Página Oficial</a>
+            <a href="privacidad.html" class="hover:text-white transition-colors">Privacidad y Datos</a>
+            <a href="terminos.html" class="hover:text-white transition-colors">Términos y Condiciones</a>
+            <a href="downloads/NEXA_Church_Installer.exe" download="NEXA_Church_Installer.exe" class="hover:text-white transition-colors">Descargar Software</a>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+</body>
+</html>

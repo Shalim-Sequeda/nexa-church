@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  body {
+    background-color: #000000;
+    color: #F4F4F5;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum" 1;
+    overflow: hidden;
+  }
+
+  /* Scrollbar ultra-discreto de estudio */
+  ::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #000000;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #27272A;
+    border-radius: 0px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3F3F46;
+  }
+}
+
+/* Clases de utilidad para controles de estudio */
+@layer components {
+  /* Botón de acción primaria (TAKE / PRESENTAR) - Control de consola de alto contraste */
+  .btn-take {
+    @apply bg-[#F4F4F5] hover:bg-[#E4E4E7] text-[#09090B] font-mono font-bold tracking-wider text-xs px-4 py-1.5 rounded-none border border-[#FFFFFF] transition-all active:translate-y-px;
+  }
+
+  /* Botón secundario sobrio */
+  .btn-secondary {
+    @apply bg-[#121212] hover:bg-[#181818] text-[#F4F4F5] border border-[#27272A] text-xs font-medium px-3 py-1.5 rounded-none transition-all active:translate-y-px;
+  }
+
+  /* Botón fantasma */
+  .btn-ghost {
+    @apply bg-transparent hover:bg-[#181818] text-[#A1A1AA] hover:text-[#F4F4F5] text-xs font-medium px-2 py-1 rounded-none transition-colors;
+  }
+
+  /* Botón de corte a negro */
+  .btn-blackout {
+    @apply bg-[#000000] text-[#A1A1AA] hover:text-[#F4F4F5] border border-[#27272A] text-xs font-mono font-bold tracking-wider px-3.5 py-1.5 rounded-none transition-all active:translate-y-px;
+  }
+
+  .btn-blackout-active {
+    @apply bg-[#D97706] text-[#000000] font-mono font-black tracking-wider text-xs px-3.5 py-1.5 rounded-none border border-[#F59E0B] transition-all;
+  }
+
+  /* Scrollbar visible para contenedores internos con desplazamiento independiente */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #090A0D;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #2E3240;
+    border-radius: 2px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #4A4F63;
+  }
+}
+
+/* Range input para Scrubber de medios */
+input[type="range"] {
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]:focus {
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 2px;
+  background: #27272A;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 10px;
+  width: 6px;
+  border-radius: 1px;
+  background: #E4E4E7;
+  margin-top: -4px;
+  transition: background-color 50ms ease;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb {
+  background: #FFFFFF;
+}

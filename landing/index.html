@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXA CHURCH — Software de Presentación para Iglesias</title>
+  <meta name="description" content="NEXA Church es un software de presentación diseñado para acompañar la adoración, la palabra y cada momento de tu iglesia, con una interfaz clara, estable y enfocada en lo esencial." />
+  
+  <!-- Open Graph / Meta -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="NEXA CHURCH — Software de Presentación para Iglesias" />
+  <meta property="og:description" content="Proyecta lo que realmente importa. Software para iglesias con motor bíblico, multimedia, control en vivo y funcionamiento offline." />
+  <meta property="og:image" content="assets/nexa-ui-4k.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="apple-touch-icon" href="assets/logo.png" />
+
+  <!-- Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            nexa: {
+              red: '#FF1E2D',
+              redHover: '#E01524',
+              bg: '#050505',
+              surface: '#0E0F12',
+              surfaceAlt: '#141518',
+              surfaceCard: '#111215',
+              border: 'rgba(255, 255, 255, 0.08)',
+              borderHover: 'rgba(255, 255, 255, 0.16)',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #050505;
+      color: #F5F5F5;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    ::selection {
+      background-color: #FF1E2D;
+      color: #ffffff;
+    }
+
+    .software-preview {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
+
+    .card-border-gradient {
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      background: linear-gradient(180deg, rgba(20, 21, 24, 0.7) 0%, rgba(14, 15, 18, 0.9) 100%);
+    }
+
+    .card-border-gradient:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      background: linear-gradient(180deg, rgba(25, 26, 30, 0.8) 0%, rgba(17, 18, 22, 0.95) 100%);
+    }
+
+    /* Subtle background grid pattern to break solid flat color */
+    .bg-grid-pattern {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    /* Ambient stage lighting beam */
+    .ambient-glow-top {
+      background: radial-gradient(ellipse 70% 45% at 50% 0%, rgba(255, 30, 45, 0.08) 0%, rgba(255, 30, 45, 0.01) 50%, transparent 80%);
+    }
+
+    /* Hide scrollbar for carousel */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #050505;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #222328;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #33343C;
+    }
+  </style>
+</head>
+<body id="top" class="bg-[#050505] text-[#F5F5F5] min-h-screen selection:bg-[#FF1E2D] selection:text-white relative bg-grid-pattern">
+
+  <!-- ====================================================
+       BACKGROUND ATMOSPHERE: CINEMATIC CHURCH WORSHIP STAGE
+       Atmósfera cinematográfica con luces de escenario y
+       congregación con manos alzadas, exactamente como la referencia.
+  ==================================================== -->
+  <div class="absolute top-0 right-0 left-0 h-[720px] pointer-events-none overflow-hidden z-0">
+    <img 
+      src="assets/church-stage.jpg" 
+      alt="Atmósfera de adoración y escenario de iglesia" 
+      class="absolute top-0 right-0 w-full sm:w-[88%] lg:w-[70%] h-full object-cover object-top opacity-75"
+    />
+    <!-- Lateral gradient fade to pure black on the left for text readability -->
+    <div class="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/75 to-transparent"></div>
+    <!-- Bottom gradient fade into pure #050505 -->
+    <div class="absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-[#050505] to-transparent"></div>
+  </div>
+
+  <!-- ====================================================
+       HEADER / NAVIGATION
+  ==================================================== -->
+  <header class="relative z-50 bg-transparent transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-3 group focus:outline-none">
+        <img 
+          src="assets/logo.png" 
+          alt="NEXA Church Logo" 
+          class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg object-contain drop-shadow-md transition-transform group-hover:scale-105"
+        />
+        <div class="flex items-baseline tracking-tight select-none">
+          <span class="text-lg sm:text-xl font-extrabold tracking-tight text-white font-sans">NEXA</span>
+          <span class="text-lg sm:text-xl font-normal text-neutral-300 ml-1.5 tracking-wider font-sans">CHURCH</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center gap-8 text-[13.5px] font-medium text-neutral-300">
+        <a href="#" class="text-white relative py-1 hover:text-white transition-colors">
+          Inicio
+          <span class="absolute bottom-0 left-0 right-0 h-[2px] bg-[#FF1E2D] rounded-full"></span>
+        </a>
+        <a href="#caracteristicas" class="hover:text-white transition-colors py-1">Características</a>
+        <a href="#capturas" class="hover:text-white transition-colors py-1">Capturas</a>
+        <a href="manual.html" class="hover:text-white transition-colors py-1">Manual</a>
+        <a href="#requisitos" class="hover:text-white transition-colors py-1">Requisitos</a>
+        <a href="#recursos" class="hover:text-white transition-colors py-1">Recursos</a>
+      </nav>
+
+      <!-- Desktop CTA Header Button -->
+      <div class="hidden md:flex items-center">
+        <a 
+          href="downloads/NEXA_Church_Installer.exe" 
+          download="NEXA_Church_Installer.exe"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#FF1E2D] hover:bg-[#E01524] text-white text-[13px] font-semibold transition-all duration-150 shadow-md shadow-red-950/40 hover:shadow-red-900/60"
+        >
+          <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M7.5 10.5L12 15m0 0l4.5-4.5M12 15V3" />
+          </svg>
+          <span>Descargar</span>
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <button 
+        type="button" 
+        id="mobileMenuBtn"
+        aria-label="Abrir menú" 
+        class="md:hidden flex items-center justify-center w-10 h-10 rounded-lg text-neutral-300 hover:text-white hover:bg-white/[0.05] transition-colors focus:outline-none"
+      >
+        <i class="ph ph-list text-2xl" id="menuIcon"></i>
+      </button>
+
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-[#0A0B0E]/95 backdrop-blur-lg border-b border-white/[0.08] px-6 py-5 space-y-3.5">
+      <a href="#" class="block text-sm font-semibold text-white py-1">Inicio</a>
+      <a href="#caracteristicas" class="block text-sm font-normal text-neutral-300 hover:text-white py-1">Características</a>
+      <a href="#capturas" class="block text-sm font-normal text-neutral-300 hover:text-white py-1">Capturas</a>
+      <a href="manual.html" class="block text-sm font-normal text-neutral-300 hover:text-white py-1">Manual de usuario</a>
+      <a href="#requisitos" class="block text-sm font-normal text-neutral-300 hover:text-white py-1">Requisitos</a>
+      <a href="#recursos" class="block text-sm font-normal text-neutral-300 hover:text-white py-1">Recursos</a>
+      <div class="pt-3 border-t border-white/[0.08]">
+        <a 
+          href="downloads/NEXA_Church_Installer.exe" 
+          download="NEXA_Church_Installer.exe"
+          class="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-[#FF1E2D] hover:bg-[#E01524] text-white font-semibold text-sm transition-all shadow-lg shadow-red-950/40"
+        >
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M7.5 10.5L12 15m0 0l4.5-4.5M12 15V3" />
+          </svg>
+          <span>Descargar NEXA Church</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ====================================================
+       HERO SECTION
+  ==================================================== -->
+  <section class="relative z-10 pt-4 sm:pt-6 lg:pt-8 pb-14 sm:pb-20 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
+        
+        <!-- Hero Left Column: Copy & CTAs -->
+        <div class="lg:col-span-6 space-y-5 sm:space-y-6">
+          
+          <!-- Tag Label -->
+          <div class="inline-block">
+            <span class="text-[11px] sm:text-xs font-semibold tracking-[0.16em] uppercase text-neutral-400 font-sans">
+              SOFTWARE DE PRESENTACIÓN PARA IGLESIAS
+            </span>
+          </div>
+
+          <!-- Main Title with Red "realmente" -->
+          <h1 class="text-4xl sm:text-5xl lg:text-[56px] font-extrabold text-white tracking-[-0.03em] leading-[1.08] font-sans">
+            Proyecta<br />
+            lo que <span class="text-[#FF1E2D]">realmente</span><br />
+            importa
+          </h1>
+
+          <!-- Body Description -->
+          <p class="text-sm sm:text-base text-neutral-300 font-normal leading-relaxed max-w-lg font-sans">
+            NEXA Church es un software de presentación diseñado para acompañar la adoración, la palabra y cada momento de tu iglesia, con una interfaz clara, estable y enfocada en lo esencial.
+          </p>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 pt-1">
+            <!-- Primary Download Button -->
+            <a 
+              href="downloads/NEXA_Church_Installer.exe" 
+              download="NEXA_Church_Installer.exe"
+              class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-lg bg-[#FF1E2D] hover:bg-[#E01524] text-white font-semibold text-sm transition-all shadow-lg shadow-red-950/40 hover:shadow-red-900/60 group"
+            >
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M7.5 10.5L12 15m0 0l4.5-4.5M12 15V3" />
+              </svg>
+              <span>Descargar NEXA Church</span>
+            </a>
+
+            <!-- Secondary Manual Button -->
+            <a 
+              href="manual.html"
+              class="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-lg bg-[#111215]/90 hover:bg-[#1A1B20] text-neutral-200 border border-white/[0.12] hover:border-white/[0.2] font-medium text-sm transition-all group"
+            >
+              <i class="ph ph-book-open text-lg text-[#FF1E2D] group-hover:text-white transition-colors"></i>
+              <span>Manual de usuario</span>
+            </a>
+          </div>
+
+          <!-- System Badges Bar -->
+          <div class="pt-5 border-t border-white/[0.08] flex flex-wrap items-center gap-4 sm:gap-5 text-xs text-neutral-400 font-medium">
+            <div class="flex items-center gap-2">
+              <i class="ph ph-windows-logo text-base text-neutral-300"></i>
+              <span>Windows 10/11</span>
+            </div>
+            <span class="text-neutral-700 hidden sm:inline">|</span>
+            <div class="flex items-center gap-2">
+              <i class="ph ph-wifi-slash text-base text-neutral-300"></i>
+              <span>Funciona sin internet</span>
+            </div>
+            <span class="text-neutral-700 hidden sm:inline">|</span>
+            <div class="flex items-center gap-2">
+              <i class="ph ph-shield-check text-base text-neutral-300"></i>
+              <span>Estable y confiable</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Hero Right Column: Authentic UI in Sleek Laptop Frame (Native 4K Responsive Picture) -->
+        <div class="lg:col-span-6 relative flex justify-center lg:justify-end">
+          <div class="relative w-full max-w-xl mx-auto lg:mr-0 group">
+            
+            <!-- Soft red & warm ambient glow behind the laptop -->
+            <div class="absolute -inset-4 bg-gradient-to-r from-red-600/25 via-red-900/10 to-transparent rounded-3xl blur-3xl opacity-70 pointer-events-none"></div>
+
+            <!-- Laptop Upper Lid (Display Chassis) -->
+            <div class="relative rounded-t-2xl bg-[#0F1014] p-2.5 sm:p-3 border-t border-x border-white/[0.18] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.85)]">
+              <!-- Top camera indicator & mic sensor -->
+              <div class="flex items-center justify-center gap-1.5 mb-2 opacity-70">
+                <div class="w-1.5 h-1.5 rounded-full bg-neutral-700 border border-white/10"></div>
+              </div>
+              
+              <!-- Screen holding the native 4K/WebP responsive image -->
+              <div class="rounded-lg overflow-hidden border border-white/[0.12] bg-[#0A0A0C] shadow-inner">
+                <picture>
+                  <source type="image/webp" srcset="assets/hero-screen.webp 1x, assets/hero-screen.webp 2x">
+                  <source type="image/png" srcset="assets/hero-screen.png 1x, assets/hero-screen-2x.png 2x">
+                  <img 
+                    src="assets/hero-screen.png" 
+                    alt="NEXA Church Software — Motor Bíblico y Salmos 23:1 con fondo" 
+                    class="w-full h-auto block object-cover software-preview"
+                  />
+                </picture>
+              </div>
+            </div>
+
+            <!-- Laptop Lower Chassis (Base / Keyboard Deck Perspective) -->
+            <div class="relative w-[104%] -ml-[2%] h-4 sm:h-5 bg-gradient-to-b from-[#22242B] via-[#15161B] to-[#0A0B0E] rounded-b-2xl border-t border-white/[0.25] shadow-2xl flex justify-center items-start">
+              <!-- Center thumb notch for opening -->
+              <div class="w-24 h-1.5 bg-[#2E303A] rounded-b-md border-b border-white/[0.08]"></div>
+            </div>
+
+            <!-- Desk Surface Reflection & Ambient Shadow -->
+            <div class="w-[95%] mx-auto h-6 bg-gradient-to-b from-white/[0.05] via-red-950/20 to-transparent blur-md rounded-full pointer-events-none mt-0.5"></div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================
+       CARACTERÍSTICAS Y CAPACIDADES DEL SOFTWARE (8 MÓDULOS)
+  ==================================================== -->
+  <section id="caracteristicas" class="relative z-10 py-16 sm:py-20 border-t border-b border-white/[0.06] bg-gradient-to-b from-[#08080B]/80 via-[#0C0D11]/90 to-[#08080B]/80 overflow-hidden">
+    <!-- Ambient top glow beam -->
+    <div class="absolute inset-0 ambient-glow-top pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <!-- Section Header with Navigation Controls -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-10">
+        <div class="max-w-2xl space-y-3">
+          <span class="text-[11px] sm:text-xs font-semibold tracking-[0.16em] uppercase text-neutral-400 font-sans">
+            CAPACIDADES Y FUNCIONES DEL SOFTWARE
+          </span>
+          <h2 class="text-3xl sm:text-4xl lg:text-[40px] font-extrabold text-white tracking-tight leading-[1.15] font-sans">
+            Todo lo que tu iglesia necesita en cada culto
+          </h2>
+          <p class="text-sm sm:text-base text-neutral-300 font-normal leading-relaxed">
+            NEXA Church integra las herramientas indispensables para la alabanza, la predicación y la transmisión en una sola interfaz estable, rápida y sin depender de internet.
+          </p>
+        </div>
+
+        <!-- Carousel Prev / Next Controls -->
+        <div class="flex items-center gap-3 shrink-0">
+          <button 
+            type="button" 
+            id="carouselPrevBtn" 
+            aria-label="Módulo anterior" 
+            class="w-11 h-11 rounded-xl bg-[#111216] border border-white/10 hover:border-[#FF1E2D]/50 hover:bg-[#1A1C24] text-neutral-300 hover:text-white flex items-center justify-center transition-all shadow-md group active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
+          >
+            <i class="ph ph-caret-left text-xl transition-transform group-hover:-translate-x-0.5"></i>
+          </button>
+          <button 
+            type="button" 
+            id="carouselNextBtn" 
+            aria-label="Siguiente módulo" 
+            class="w-11 h-11 rounded-xl bg-[#111216] border border-white/10 hover:border-[#FF1E2D]/50 hover:bg-[#1A1C24] text-neutral-300 hover:text-white flex items-center justify-center transition-all shadow-md group active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
+          >
+            <i class="ph ph-caret-right text-xl transition-transform group-hover:translate-x-0.5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Horizontal Carousel Track -->
+      <div 
+        id="featuresCarousel" 
+        class="flex gap-5 sm:gap-6 overflow-x-auto scroll-smooth pb-4 pt-1 snap-x snap-mandatory no-scrollbar cursor-grab active:cursor-grabbing"
+      >
+        
+        <!-- Card 1: Motor Bíblico Multiversión -->
+        <div class="card-border-gradient rounded-xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 hover:border-white/20 shrink-0 w-[88%] sm:w-[48%] lg:w-[350px] snap-start select-none relative overflow-hidden group">
+          <!-- Background Image: Classic Holy Bible Macro -->
+          <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <img 
+              src="assets/mod-bible.jpg" 
+              alt="Motor Bíblico" 
+              class="w-full h-full object-cover object-center opacity-10 group-hover:opacity-20 transition-opacity duration-300 filter grayscale contrast-125"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0e0f12] via-[#0e0f12]/80 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0e0f12] via-[#0e0f12]/60 to-transparent"></div>
+          </div>
+          <div class="relative z-10">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4 bg-red-600/10 border border-red-500/20">
+              <i class="ph ph-book-open text-2xl text-[#FF1E2D]"></i>
+            </div>
+            <h3 class="text-base sm:text-lg font-bold text-white mb-2 font-sans tracking-tight">
+              Motor Bíblico Multiversión
+            </h3>
+            <p class="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed mb-4">
+              Búsqueda instantánea de libros, capítulos y versículos por teclado o navegación. Proyección con tipografía optimizada para lectura en proyector.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-white/[0.06] flex flex-col gap-1.5 text-xs text-neutral-300 relative z-10">
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>RVR1960, NVI, NTV, LBLA, TLA y DHH</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>Versículos individuales o rangos</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Gestión de Alabanza y Letras -->
+        <div class="card-border-gradient rounded-xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 hover:border-white/20 shrink-0 w-[88%] sm:w-[48%] lg:w-[350px] snap-start select-none relative overflow-hidden group">
+          <!-- Background Image: Worship Microphone & Stage -->
+          <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <img 
+              src="assets/mod-worship.jpg" 
+              alt="Alabanza y Letras" 
+              class="w-full h-full object-cover object-center opacity-10 group-hover:opacity-20 transition-opacity duration-300 filter grayscale contrast-125"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0e0f12] via-[#0e0f12]/80 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0e0f12] via-[#0e0f12]/60 to-transparent"></div>
+          </div>
+          <div class="relative z-10">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4 bg-red-600/10 border border-red-500/20">
+              <i class="ph ph-music-notes text-2xl text-[#FF1E2D]"></i>
+            </div>
+            <h3 class="text-base sm:text-lg font-bold text-white mb-2 font-sans tracking-tight">
+              Alabanza y Letras en Vivo
+            </h3>
+            <p class="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed mb-4">
+              Biblioteca organizada por estrofas, coros, puentes y pre-coros con formateo automático para pantalla y búsqueda inmediata durante la ministración.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-white/[0.06] flex flex-col gap-1.5 text-xs text-neutral-300 relative z-10">
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>Edición y transposición de acordes</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>Repertorios ágiles por servicio</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Flujo de Cues y Control Room -->
+        <div class="card-border-gradient rounded-xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 hover:border-white/20 shrink-0 w-[88%] sm:w-[48%] lg:w-[350px] snap-start select-none relative overflow-hidden group">
+          <!-- Background Image: Audio/Video Mixing Console -->
+          <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <img 
+              src="assets/mod-control.jpg" 
+              alt="Control Room" 
+              class="w-full h-full object-cover object-center opacity-10 group-hover:opacity-20 transition-opacity duration-300 filter grayscale contrast-125"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0e0f12] via-[#0e0f12]/80 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0e0f12] via-[#0e0f12]/60 to-transparent"></div>
+          </div>
+          <div class="relative z-10">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4 bg-red-600/10 border border-red-500/20">
+              <i class="ph ph-sliders text-2xl text-[#FF1E2D]"></i>
+            </div>
+            <h3 class="text-base sm:text-lg font-bold text-white mb-2 font-sans tracking-tight">
+              Control Room y Cues
+            </h3>
+            <p class="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed mb-4">
+              Estructura el orden completo del culto: canciones, pasajes bíblicos, prédica, videos y anuncios. Flujo dual seguro entre Preview y Live.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-white/[0.06] flex flex-col gap-1.5 text-xs text-neutral-300 relative z-10">
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>Botón TAKE para pase instantáneo</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>Blackout y Clear de texto inmediato</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Multimedia y Motion Loops -->
+        <div class="card-border-gradient rounded-xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 hover:border-white/20 shrink-0 w-[88%] sm:w-[48%] lg:w-[350px] snap-start select-none relative overflow-hidden group">
+          <!-- Background Image: Stage Lighting & Visuals -->
+          <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <img 
+              src="assets/mod-media.jpg" 
+              alt="Multimedia" 
+              class="w-full h-full object-cover object-center opacity-10 group-hover:opacity-20 transition-opacity duration-300 filter grayscale contrast-125"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0e0f12] via-[#0e0f12]/80 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0e0f12] via-[#0e0f12]/60 to-transparent"></div>
+          </div>
+          <div class="relative z-10">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4 bg-red-600/10 border border-red-500/20">
+              <i class="ph ph-film-slate text-2xl text-[#FF1E2D]"></i>
+            </div>
+            <h3 class="text-base sm:text-lg font-bold text-white mb-2 font-sans tracking-tight">
+              Multimedia y Motion Loops
+            </h3>
+            <p class="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed mb-4">
+              Reproducción fluida acelerada por hardware de videos en bucle, fondos animados de adoración, imágenes y placas gráficas de alta calidad.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-white/[0.06] flex flex-col gap-1.5 text-xs text-neutral-300 relative z-10">
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>Panel de audio y faders de volumen</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>Soporte MP4, WEBM, PNG y JPEG</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5: Stage Display para Músicos y Púlpito -->
+        <div class="card-border-gradient rounded-xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 hover:border-white/20 shrink-0 w-[88%] sm:w-[48%] lg:w-[350px] snap-start select-none relative overflow-hidden group">
+          <!-- Background Image: Stage Monitor Confidence Display -->
+          <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <img 
+              src="assets/mod-stage.jpg" 
+              alt="Stage Display" 
+              class="w-full h-full object-cover object-center opacity-10 group-hover:opacity-20 transition-opacity duration-300 filter grayscale contrast-125"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0e0f12] via-[#0e0f12]/80 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0e0f12] via-[#0e0f12]/60 to-transparent"></div>
+          </div>
+          <div class="relative z-10">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4 bg-red-600/10 border border-red-500/20">
+              <i class="ph ph-monitor-play text-2xl text-[#FF1E2D]"></i>
+            </div>
+            <h3 class="text-base sm:text-lg font-bold text-white mb-2 font-sans tracking-tight">
+              Stage Display (Retorno)
+            </h3>
+            <p class="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed mb-4">
+              Pantalla de retorno dedicada para músicos y predicadores con visibilidad limpia del verso proyectado, el siguiente cue en espera y el tiempo.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-white/[0.06] flex flex-col gap-1.5 text-xs text-neutral-300 relative z-10">
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>Reloj y cuenta regresiva de prédica</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>Mensajes y avisos privados al altar</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6: Salidas Múltiples y Streaming -->
+        <div class="card-border-gradient rounded-xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 hover:border-white/20 shrink-0 w-[88%] sm:w-[48%] lg:w-[350px] snap-start select-none relative overflow-hidden group">
+          <!-- Background Image: Broadcast Video Camera Setup -->
+          <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <img 
+              src="assets/mod-stream.jpg" 
+              alt="Multisalida y Streaming" 
+              class="w-full h-full object-cover object-center opacity-10 group-hover:opacity-20 transition-opacity duration-300 filter grayscale contrast-125"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0e0f12] via-[#0e0f12]/80 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0e0f12] via-[#0e0f12]/60 to-transparent"></div>
+          </div>
+          <div class="relative z-10">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4 bg-red-600/10 border border-red-500/20">
+              <i class="ph ph-broadcast text-2xl text-[#FF1E2D]"></i>
+            </div>
+            <h3 class="text-base sm:text-lg font-bold text-white mb-2 font-sans tracking-tight">
+              Multisalida y Streaming
+            </h3>
+            <p class="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed mb-4">
+              Salidas independientes para la pantalla principal del auditorio, monitor de escenario y captura limpia para transmisión en directo.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-white/[0.06] flex flex-col gap-1.5 text-xs text-neutral-300 relative z-10">
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>Integración con OBS Studio y vMix</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>Lower thirds y salida limpia (Clean Feed)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 7: Anuncios y Placas de Servicio -->
+        <div class="card-border-gradient rounded-xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 hover:border-white/20 shrink-0 w-[88%] sm:w-[48%] lg:w-[350px] snap-start select-none relative overflow-hidden group">
+          <!-- Background Image: Modern Welcome Foyer Display -->
+          <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <img 
+              src="assets/mod-announcements.jpg" 
+              alt="Anuncios y Placas" 
+              class="w-full h-full object-cover object-center opacity-10 group-hover:opacity-20 transition-opacity duration-300 filter grayscale contrast-125"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0e0f12] via-[#0e0f12]/80 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0e0f12] via-[#0e0f12]/60 to-transparent"></div>
+          </div>
+          <div class="relative z-10">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4 bg-red-600/10 border border-red-500/20">
+              <i class="ph ph-megaphone text-2xl text-[#FF1E2D]"></i>
+            </div>
+            <h3 class="text-base sm:text-lg font-bold text-white mb-2 font-sans tracking-tight">
+              Anuncios y Placas de Servicio
+            </h3>
+            <p class="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed mb-4">
+              Diseña y proyecta avisos semanales, bienvenida de visitantes, datos de ofrendas/diezmos y títulos de sermones sin programas externos.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-white/[0.06] flex flex-col gap-1.5 text-xs text-neutral-300 relative z-10">
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>Editor integrado con diseño sobrio</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>Rotación programada para el pre-culto</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 8: 100% Offline, Ligero y Estable -->
+        <div class="card-border-gradient rounded-xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 hover:border-white/20 shrink-0 w-[88%] sm:w-[48%] lg:w-[350px] snap-start select-none relative overflow-hidden group">
+          <!-- Background Image: Industrial Hardware Workstation -->
+          <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <img 
+              src="assets/mod-offline.jpg" 
+              alt="Offline Engine" 
+              class="w-full h-full object-cover object-center opacity-10 group-hover:opacity-20 transition-opacity duration-300 filter grayscale contrast-125"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0e0f12] via-[#0e0f12]/80 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0e0f12] via-[#0e0f12]/60 to-transparent"></div>
+          </div>
+          <div class="relative z-10">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4 bg-red-600/10 border border-red-500/20">
+              <i class="ph ph-shield-check text-2xl text-[#FF1E2D]"></i>
+            </div>
+            <h3 class="text-base sm:text-lg font-bold text-white mb-2 font-sans tracking-tight">
+              100% Offline y Ultra Estable
+            </h3>
+            <p class="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed mb-4">
+              Cero dependencia de internet durante el servicio; todas las bases bíblicas, canciones y medios residen de forma segura en tu equipo local.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-white/[0.06] flex flex-col gap-1.5 text-xs text-neutral-300 relative z-10">
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>Motor en Rust: menos de 150 MB RAM</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="ph ph-check text-xs text-[#FF1E2D]"></i>
+              <span>Arranque instantáneo y atajos de teclado</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Interactive Indicators / Dots -->
+      <div class="flex items-center justify-center gap-2 pt-6" id="carouselIndicators"></div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================
+       SECTION 2: "TODO EN UN SOLO LUGAR"
+  ==================================================== -->
+  <section id="capturas" class="relative z-10 py-16 sm:py-24 lg:py-28 overflow-hidden bg-[#060709]">
+    <!-- Atmospheric church production booth backdrop with soft mask -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      <img 
+        src="assets/bg-sec-todo.jpg" 
+        alt="Cabina de producción audiovisual e iglesia" 
+        class="w-full h-full object-cover object-center opacity-20 filter grayscale contrast-125"
+      />
+      <!-- Gradient fades to preserve absolute text contrast and sleek edge blending -->
+      <div class="absolute inset-0 bg-gradient-to-r from-[#060709] via-[#060709]/85 to-[#060709]/60"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-[#060709] via-transparent to-[#060709]"></div>
+    </div>
+    <!-- Atmospheric ambient stage glow behind right showcase screen -->
+    <div class="absolute top-1/2 right-0 -translate-y-1/2 w-[650px] h-[550px] bg-[radial-gradient(circle_at_center,rgba(255,30,45,0.08)_0%,rgba(20,22,28,0.3)_40%,transparent_70%)] blur-3xl pointer-events-none z-0"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        
+        <!-- Left: Copy & Button -->
+        <div class="lg:col-span-5 space-y-6">
+          <h2 class="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-white tracking-tight leading-[1.12] font-sans">
+            Todo en un solo lugar
+          </h2>
+          <p class="text-sm sm:text-base text-neutral-300 font-normal leading-relaxed max-w-md">
+            NEXA Church reúne las herramientas que necesitas para proyectar con excelencia: Biblia, letras, multimedia, anuncios y más, con un flujo de trabajo simple y confiable.
+          </p>
+          <div class="pt-2">
+            <a 
+              href="#caracteristicas" 
+              class="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-[#141519] hover:bg-[#1C1E24] text-white border border-white/[0.12] hover:border-white/[0.22] font-medium text-xs sm:text-sm transition-all group"
+            >
+              <span>Conocer características</span>
+              <i class="ph ph-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Authentic 4K UI with Floating Badge "Interfaz clara y organizada" -->
+        <div class="lg:col-span-7 relative flex justify-center lg:justify-end">
+          <div class="relative w-full max-w-xl rounded-xl overflow-hidden border border-white/[0.12] shadow-2xl bg-[#0D0E12] group">
+            <picture>
+              <source type="image/webp" srcset="assets/sec2-screen.webp 1x, assets/sec2-screen.webp 2x">
+              <source type="image/png" srcset="assets/sec2-screen.png 1x, assets/sec2-screen-2x.png 2x">
+              <img 
+                src="assets/sec2-screen.png" 
+                alt="NEXA Church — Todo en un solo lugar con interfaz clara y organizada" 
+                class="w-full h-auto block object-cover software-preview"
+              />
+            </picture>
+            
+            <!-- Floating badge matching reference -->
+            <div class="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-[#111216]/95 border border-white/20 shadow-2xl backdrop-blur-md">
+              <div class="w-6 h-6 rounded-full bg-red-600/20 border border-red-500/40 flex items-center justify-center">
+                <i class="ph ph-squares-four text-xs text-[#FF1E2D]"></i>
+              </div>
+              <span class="text-xs font-semibold text-white">Interfaz clara y organizada</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================
+       SECTION 3: "DISEÑADO PARA LA REALIDAD DE TU IGLESIA"
+       Native 4K/WebP Live Output & Cues Display Screen
+  ==================================================== -->
+  <section class="relative z-10 py-16 sm:py-24 lg:py-28 border-t border-white/[0.05] bg-[#050608] overflow-hidden">
+    <!-- Atmospheric church sanctuary beams backdrop with soft mask -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      <img 
+        src="assets/bg-sec-diseno.jpg" 
+        alt="Auditorio y santuario de adoración" 
+        class="w-full h-full object-cover object-center opacity-22 filter grayscale contrast-125"
+      />
+      <!-- Gradient fades to preserve absolute text contrast and sleek edge blending -->
+      <div class="absolute inset-0 bg-gradient-to-l from-[#050608] via-[#050608]/85 to-[#050608]/50"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-[#050608]"></div>
+    </div>
+    <!-- Atmospheric ambient stage glow behind left stage display screen -->
+    <div class="absolute top-1/2 left-0 -translate-y-1/2 w-[650px] h-[550px] bg-[radial-gradient(circle_at_center,rgba(255,30,45,0.07)_0%,rgba(18,20,26,0.3)_40%,transparent_70%)] blur-3xl pointer-events-none z-0"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        
+        <!-- Left: Live Output & Cues Display Screen (Native 4K Responsive Picture) -->
+        <div class="lg:col-span-7 order-2 lg:order-1 relative flex justify-center lg:justify-start">
+          <div class="relative w-full max-w-xl rounded-xl overflow-hidden border border-white/[0.12] shadow-2xl bg-[#0D0E12]">
+            <picture>
+              <source type="image/webp" srcset="assets/sec3-screen.webp 1x, assets/sec3-screen.webp 2x">
+              <source type="image/png" srcset="assets/sec3-screen.png 1x, assets/sec3-screen-2x.png 2x">
+              <img 
+                src="assets/sec3-screen.png" 
+                alt="Pantalla de control y monitoreo en vivo de NEXA Church con Cues, Preview y Live" 
+                class="w-full h-auto block object-cover software-preview"
+              />
+            </picture>
+          </div>
+        </div>
+
+        <!-- Right: Copy -->
+        <div class="lg:col-span-5 order-1 lg:order-2 space-y-6">
+          <h2 class="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-white tracking-tight leading-[1.12] font-sans">
+            Diseñado para la<br class="hidden sm:block" />
+            realidad de tu iglesia
+          </h2>
+          <p class="text-sm sm:text-base text-neutral-300 font-normal leading-relaxed max-w-md">
+            Funciona de forma local, sin depender de internet, para que puedas enfocarte en lo más importante: la adoración y la palabra.
+          </p>
+
+          <div class="pt-2 flex flex-col gap-3 text-xs sm:text-sm text-neutral-400">
+            <div class="flex items-center gap-3">
+              <i class="ph ph-check-circle text-base text-[#FF1E2D]"></i>
+              <span>Cero cortes por intermitencia de conexión</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <i class="ph ph-check-circle text-base text-[#FF1E2D]"></i>
+              <span>Salidas independientes para proyector y streaming</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <i class="ph ph-check-circle text-base text-[#FF1E2D]"></i>
+              <span>Soporte para control remoto móvil en red local</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================
+       SECTION: REQUISITOS DEL SISTEMA
+  ==================================================== -->
+  <section id="requisitos" class="relative z-10 py-16 sm:py-24 border-t border-white/[0.05] bg-gradient-to-b from-[#050505] via-[#08090D] to-[#050505] overflow-hidden">
+    <!-- Center subtle spotlight aura from top -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[750px] h-[350px] bg-[radial-gradient(ellipse_at_top,rgba(255,30,45,0.06)_0%,transparent_70%)] pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16 space-y-3">
+        <span class="text-xs font-semibold tracking-[0.16em] uppercase text-neutral-400">
+          ESPECIFICACIONES TÉCNICAS
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-sans">
+          Requisitos del Sistema
+        </h2>
+        <p class="text-sm text-neutral-400">
+          NEXA Church está optimizado para funcionar con alta eficiencia y máxima estabilidad en equipos Windows estándar.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        
+        <!-- Requirement 1 -->
+        <div class="card-border-gradient rounded-xl p-6 sm:p-7 space-y-4">
+          <div class="w-10 h-10 rounded-lg bg-white/[0.04] flex items-center justify-center">
+            <i class="ph ph-desktop text-2xl text-[#FF1E2D]"></i>
+          </div>
+          <h3 class="text-base font-bold text-white">Sistema Operativo</h3>
+          <ul class="text-xs sm:text-sm text-neutral-400 space-y-2">
+            <li>• Windows 10 (64 bits) o superior</li>
+            <li>• Windows 11 compatible</li>
+            <li>• Arquitectura x64 optimizada</li>
+          </ul>
+        </div>
+
+        <!-- Requirement 2 -->
+        <div class="card-border-gradient rounded-xl p-6 sm:p-7 space-y-4">
+          <div class="w-10 h-10 rounded-lg bg-white/[0.04] flex items-center justify-center">
+            <i class="ph ph-cpu text-2xl text-[#FF1E2D]"></i>
+          </div>
+          <h3 class="text-base font-bold text-white">Hardware Recomendado</h3>
+          <ul class="text-xs sm:text-sm text-neutral-400 space-y-2">
+            <li>• CPU: Intel Core i3 / AMD Ryzen 3 o sup.</li>
+            <li>• RAM: 4 GB mínimo (8 GB recomendado)</li>
+            <li>• Disco: 500 MB libres para instalación</li>
+          </ul>
+        </div>
+
+        <!-- Requirement 3 -->
+        <div class="card-border-gradient rounded-xl p-6 sm:p-7 space-y-4">
+          <div class="w-10 h-10 rounded-lg bg-white/[0.04] flex items-center justify-center">
+            <i class="ph ph-projector-screen text-2xl text-[#FF1E2D]"></i>
+          </div>
+          <h3 class="text-base font-bold text-white">Pantallas y Salidas</h3>
+          <ul class="text-xs sm:text-sm text-neutral-400 space-y-2">
+            <li>• Resolución sugerida: 1920 × 1080 (Full HD)</li>
+            <li>• Soporte para Proyector / TV secundaria</li>
+            <li>• Compatibilidad directa con OBS Studio</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================
+       SECTION: RECURSOS Y DESCARGA FINAL
+  ==================================================== -->
+  <section id="descargar" class="relative z-10 py-20 sm:py-28 border-t border-white/[0.06] bg-gradient-to-b from-[#08080B] via-[#0A0C11] to-[#050505] overflow-hidden">
+    <!-- Atmospheric Church Stage Backdrop (Faint opacity with deep dark gradient overlay) -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      <img 
+        src="assets/church-stage.jpg" 
+        alt="Auditorio de iglesia" 
+        class="w-full h-full object-cover object-bottom opacity-20"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/85 to-[#08080B]/95"></div>
+    </div>
+    <!-- Red stage glow aura in the center behind the title and CTA button -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-[radial-gradient(circle_at_center,rgba(255,30,45,0.12)_0%,rgba(255,30,45,0.02)_50%,transparent_75%)] blur-3xl pointer-events-none z-0"></div>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-8 relative z-10">
+      
+
+      <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-[1.12] font-sans">
+        Lleva las presentaciones de tu iglesia<br class="hidden sm:block" />
+        al siguiente nivel
+      </h2>
+
+      <p class="text-sm sm:text-base text-neutral-300 max-w-xl mx-auto font-normal leading-relaxed">
+        Descarga NEXA Church hoy mismo y experimenta la estabilidad, rapidez y claridad que tu equipo de alabanza y predicación necesitan.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+        <a 
+          href="downloads/NEXA_Church_Installer.exe" 
+          download="NEXA_Church_Installer.exe"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-lg bg-[#FF1E2D] hover:bg-[#E01524] text-white font-bold text-base transition-all shadow-xl shadow-red-950/50 hover:shadow-red-900/70"
+        >
+          <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M7.5 10.5L12 15m0 0l4.5-4.5M12 15V3" />
+          </svg>
+          <span>Descargar NEXA Church para Windows</span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================
+       FOOTER
+  ==================================================== -->
+  <footer id="recursos" class="relative z-10 border-t border-white/[0.07] bg-[#050505] py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        
+        <!-- Brand Info (Clickable to scroll to top) -->
+        <a href="#top" class="flex items-center gap-3 group focus:outline-none" title="Volver al inicio">
+          <img 
+            src="assets/logo.png" 
+            alt="NEXA Church" 
+            class="w-7 h-7 rounded-md object-contain transition-transform group-hover:scale-105"
+          />
+          <div class="flex items-baseline select-none">
+            <span class="text-base font-extrabold tracking-tight text-white group-hover:text-white transition-colors">NEXA</span>
+            <span class="text-base font-light text-neutral-400 ml-1.5 tracking-wider">CHURCH</span>
+          </div>
+          <span class="text-neutral-600 text-xs ml-3 hidden sm:inline">|</span>
+          <span class="text-neutral-500 text-xs hidden sm:inline">Software de presentación para iglesias</span>
+        </a>
+
+        <!-- Links (Reorganizados y limpios) -->
+        <div class="flex flex-wrap items-center justify-center gap-6 text-xs text-neutral-400">
+          <a href="manual.html" class="hover:text-white transition-colors">Manual de usuario</a>
+          <a href="privacidad.html" class="hover:text-white transition-colors">Privacidad y Datos</a>
+          <a href="terminos.html" class="hover:text-white transition-colors">Términos y Condiciones</a>
+          <a href="downloads/NEXA_Church_Installer.exe" download="NEXA_Church_Installer.exe" class="hover:text-white transition-colors flex items-center gap-1.5 text-neutral-300 hover:text-[#FF1E2D]">
+            <i class="ph ph-download-simple"></i>
+            <span>Descarga</span>
+          </a>
+        </div>
+
+      </div>
+
+      <div class="mt-8 pt-8 border-t border-white/[0.05] flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-4">
+        <p>© 2026 NEXA Church. Todos los derechos reservados.</p>
+        <div class="flex items-center gap-2 text-neutral-400">
+          <span>Desarrollado por</span>
+          <div class="flex items-center gap-2 font-medium text-neutral-300">
+            <img src="assets/shalim-technologies-logo.jpg" alt="Shalim Technologies" class="w-4 h-4 rounded-full object-cover border border-white/20 inline-block" />
+            <span class="hover:text-white transition-colors">Shalim Technologies</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ====================================================
+       INTERACTIVE JAVASCRIPT
+  ==================================================== -->
+  <script>
+    // Mobile Drawer Toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = document.getElementById('menuIcon');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      const isHidden = mobileMenu.classList.contains('hidden');
+      if (isHidden) {
+        mobileMenu.classList.remove('hidden');
+        menuIcon.classList.remove('ph-list');
+        menuIcon.classList.add('ph-x');
+      } else {
+        mobileMenu.classList.add('hidden');
+        menuIcon.classList.remove('ph-x');
+        menuIcon.classList.add('ph-list');
+      }
+    });
+
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        menuIcon.classList.remove('ph-x');
+        menuIcon.classList.add('ph-list');
+      });
+    });
+
+    // Features Horizontal Carousel Logic
+    const carousel = document.getElementById('featuresCarousel');
+    const prevBtn = document.getElementById('carouselPrevBtn');
+    const nextBtn = document.getElementById('carouselNextBtn');
+    const indicatorsContainer = document.getElementById('carouselIndicators');
+
+    if (carousel && prevBtn && nextBtn && indicatorsContainer) {
+      const cards = carousel.children;
+      const totalCards = cards.length;
+
+      // Generate dynamic dot indicators
+      for (let i = 0; i < totalCards; i++) {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.setAttribute('aria-label', `Ir al módulo ${i + 1}`);
+        dot.className = `h-2 rounded-full transition-all duration-300 ${i === 0 ? 'bg-[#FF1E2D] w-6' : 'bg-white/20 hover:bg-white/40 w-2'}`;
+        dot.addEventListener('click', () => {
+          cards[i].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+        });
+        indicatorsContainer.appendChild(dot);
+      }
+
+      function updateCarouselState() {
+        const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+        prevBtn.disabled = carousel.scrollLeft <= 10;
+        nextBtn.disabled = carousel.scrollLeft >= maxScroll - 10;
+
+        // Calculate active card index
+        const cardWidth = cards[0].offsetWidth + 20;
+        const activeIndex = Math.min(totalCards - 1, Math.max(0, Math.round(carousel.scrollLeft / cardWidth)));
+
+        Array.from(indicatorsContainer.children).forEach((dot, index) => {
+          if (index === activeIndex) {
+            dot.className = 'h-2 w-6 rounded-full bg-[#FF1E2D] transition-all duration-300';
+          } else {
+            dot.className = 'h-2 w-2 rounded-full bg-white/20 hover:bg-white/40 transition-all duration-300';
+          }
+        });
+      }
+
+      const getScrollDistance = () => {
+        return cards[0].offsetWidth + 20;
+      };
+
+      prevBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: -getScrollDistance(), behavior: 'smooth' });
+      });
+
+      nextBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: getScrollDistance(), behavior: 'smooth' });
+      });
+
+      carousel.addEventListener('scroll', updateCarouselState, { passive: true });
+      window.addEventListener('resize', updateCarouselState);
+      updateCarouselState();
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Política de Privacidad y Tratamiento de Datos — NEXA Church</title>
+  <meta name="description" content="Política oficial de privacidad y tratamiento de datos de NEXA Church. Software de uso 100% local sin telemetría ni recopilación de información en la nube." />
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            nexaRed: {
+              DEFAULT: '#FF1E2D',
+              hover: '#E01524',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #060709;
+      color: #D1D5DB;
+      font-family: 'Inter', sans-serif;
+    }
+    .prose-nexa h2 {
+      scroll-margin-top: 100px;
+    }
+    @media print {
+      header, aside, .no-print {
+        display: none !important;
+      }
+      body {
+        background: #FFFFFF !important;
+        color: #000000 !important;
+      }
+      .print-full {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      h1, h2, h3, h4 {
+        color: #000000 !important;
+      }
+      p, li, span, td {
+        color: #222222 !important;
+      }
+    }
+  </style>
+</head>
+<body class="selection:bg-[#FF1E2D] selection:text-white antialiased">
+
+  <!-- ====================================================
+       TOP NAVIGATION BAR
+  ==================================================== -->
+  <header class="sticky top-0 z-50 bg-[#060709]/90 backdrop-blur-md border-b border-white/[0.08]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand & Back Link -->
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="flex items-center gap-2.5 group">
+          <img src="assets/logo.png" alt="NEXA Church" class="w-8 h-8 rounded-lg object-contain transition-transform group-hover:scale-105" />
+          <div class="flex items-baseline select-none">
+            <span class="text-base font-extrabold tracking-tight text-white font-sans">NEXA</span>
+            <span class="text-base font-light text-neutral-300 ml-1 tracking-wider font-sans">CHURCH</span>
+          </div>
+        </a>
+        <span class="text-neutral-700 hidden sm:inline">|</span>
+        <span class="text-xs font-semibold uppercase tracking-wider text-neutral-400 hidden sm:inline">
+          Tratamiento de Datos y Privacidad
+        </span>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-3">
+        <button 
+          onclick="window.print()" 
+          class="no-print inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#141519] hover:bg-[#1D1F25] text-neutral-300 hover:text-white border border-white/10 text-xs font-medium transition-all"
+          title="Imprimir política"
+        >
+          <i class="ph ph-printer text-base"></i>
+          <span class="hidden sm:inline">Imprimir / PDF</span>
+        </button>
+
+        <a 
+          href="index.html" 
+          class="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-white transition-colors ml-1"
+        >
+          <i class="ph ph-arrow-left text-sm"></i>
+          <span>Volver al inicio</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ====================================================
+       CONTENT
+  ==================================================== -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16">
+    <div class="space-y-10 prose-nexa print-full">
+      
+      <!-- Header -->
+      <div class="border-b border-white/[0.08] pb-8">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-600/10 border border-red-500/20 text-[#FF1E2D] text-xs font-semibold mb-3">
+          <i class="ph ph-shield-check"></i>
+          <span>COMPROMISO DE SEGURIDAD Y PRIVACIDAD</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+          Política de Privacidad y Tratamiento de Datos
+        </h1>
+        <p class="text-sm sm:text-base text-neutral-300 mt-3 leading-relaxed">
+          Última actualización: Octubre de 2026. NEXA Church opera bajo el principio de <strong>Privacidad por Diseño (Privacy by Design)</strong> y arquitectura local independiente.
+        </p>
+      </div>
+
+      <!-- Declaración Resumen -->
+      <div class="p-5 rounded-xl bg-[#0D0E12] border border-white/10 flex items-start gap-4">
+        <div class="w-10 h-10 rounded-lg bg-red-600/15 border border-red-500/30 flex items-center justify-center shrink-0 mt-0.5">
+          <i class="ph ph-lock-key text-xl text-[#FF1E2D]"></i>
+        </div>
+        <div class="text-sm text-neutral-300 space-y-1.5">
+          <strong class="text-white block text-base">Resumen Fundamental</strong>
+          <p class="leading-relaxed text-xs sm:text-sm">
+            NEXA Church <strong>NO recopila, NO almacena en la nube, NO rastrea y NO vende</strong> ninguna información de tu iglesia, miembros, donantes o equipo ministerial. Todas tus canciones, notas, anuncios, biblias y archivos multimedia residen 100% de manera local y encriptada en el disco duro de tu computadora.
+          </p>
+        </div>
+      </div>
+
+      <!-- 1. ALCANCE Y RESPONSABLE -->
+      <section class="space-y-3">
+        <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
+          <span class="text-[#FF1E2D]">1.</span> Identidad y Responsable del Software
+        </h2>
+        <p class="text-sm text-neutral-300 leading-relaxed">
+          NEXA Church es una aplicación de software de escritorio para Windows desarrollada por <strong>Shalim Technologies</strong>. La presente política rige el uso de la aplicación descargable y nuestro sitio web oficial.
+        </p>
+      </section>
+
+      <!-- 2. ARQUITECTURA LOCAL FIRST -->
+      <section class="space-y-3">
+        <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
+          <span class="text-[#FF1E2D]">2.</span> Almacenamiento Local (Local-First Architecture)
+        </h2>
+        <p class="text-sm text-neutral-300 leading-relaxed">
+          A diferencia de los sistemas basados en software como servicio (SaaS) o plataformas en la nube que centralizan bases de datos en servidores remotos:
+        </p>
+        <ul class="list-disc list-inside space-y-2 text-xs sm:text-sm text-neutral-300 pl-2">
+          <li><strong>Bases de datos locales:</strong> Las letras de canciones, acordes, versiones bíblicas y secuencias de culto se guardan en el almacenamiento local del sistema operativo del usuario.</li>
+          <li><strong>Archivos multimedia:</strong> Las imágenes, videos y loops agregados a la biblioteca permanecen en tu equipo. NEXA Church no sube copias a servidores externos.</li>
+          <li><strong>Datos de Anuncios y Donaciones:</strong> Cualquier información proyectada sobre diezmos, ofrendas, números de cuenta bancaria o avisos congregacionales se procesa únicamente en la memoria local del equipo en el momento de la emisión.</li>
+        </ul>
+      </section>
+
+      <!-- 3. CERO TELEMETRÍA Y SIN RASTREO -->
+      <section class="space-y-3">
+        <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
+          <span class="text-[#FF1E2D]">3.</span> Cero Telemetría, Rastreo o Publicidad
+        </h2>
+        <p class="text-sm text-neutral-300 leading-relaxed">
+          NEXA Church fue concebido con el compromiso de mantener la pureza y reverencia del servicio eclesiástico:
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
+            <h3 class="text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+              <i class="ph ph-x-circle text-[#FF1E2D]"></i> Sin Rastreadores de Actividad
+            </h3>
+            <p class="text-xs text-neutral-400 leading-relaxed">
+              El software no registra los sermones, canciones ni pasajes bíblicos que utilizas, ni crea perfiles de comportamiento de tu congregación.
+            </p>
+          </div>
+          <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
+            <h3 class="text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+              <i class="ph ph-x-circle text-[#FF1E2D]"></i> Sin Publicidad ni Programas Adicionales
+            </h3>
+            <p class="text-xs text-neutral-400 leading-relaxed">
+              El instalador oficial está 100% limpio de adware, extensiones de terceros, minería de criptomonedas o paquetes promocionales.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. ROL DE LA CONGREGACIÓN -->
+      <section class="space-y-3">
+        <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
+          <span class="text-[#FF1E2D]">4.</span> Rol de la Congregación como Responsable del Tratamiento
+        </h2>
+        <p class="text-sm text-neutral-300 leading-relaxed">
+          De acuerdo con el Reglamento General de Protección de Datos (GDPR), legislaciones de Habeas Data y leyes aplicables de protección de datos personales:
+        </p>
+        <p class="text-xs sm:text-sm text-neutral-300 leading-relaxed">
+          La <strong>iglesia u organización usuaria</strong> actúa como la única Responsable del Tratamiento de los datos personales (nombres, fotografías, peticiones de oración o anuncios) que decida ingresar y proyectar a través de las pantallas. NEXA Church proporciona exclusivamente la herramienta técnica para dicha proyección y no tiene acceso a esa información.
+        </p>
+      </section>
+
+      <!-- 5. LEGALIDAD, PROPIEDAD INTELECTUAL Y RECURSOS -->
+      <section class="space-y-3">
+        <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
+          <span class="text-[#FF1E2D]">5.</span> Legalidad de Recursos Multimedia y Licencias Libres de Derechos
+        </h2>
+        <p class="text-sm text-neutral-300 leading-relaxed">
+          Para garantizar la tranquilidad legal de las congregaciones e instituciones eclesiásticas que utilizan el software:
+        </p>
+        <ul class="list-disc list-inside space-y-2 text-xs sm:text-sm text-neutral-300 pl-2">
+          <li><strong>Recursos visuales integrados:</strong> Todas las fotografías, fondos temáticos de módulos (Biblias, consolas, pantallas LED, micrófonos de adoración, retorno de escenario, cámaras de transmisión y componentes de hardware) y recursos precargados en NEXA Church y su portal oficial son de autoría propia y generación licenciada 100% libres de derechos de autor (Royalty-Free / Sin Copyright).</li>
+          <li><strong>Textos Bíblicos:</strong> Las versiones bíblicas públicas o de dominio canónico integradas respetan las pautas de divulgación ministerial permitidas para la lectura y predicación comunitaria en culto.</li>
+          <li><strong>Contenido del usuario:</strong> La iglesia conserva en todo momento la titularidad, propiedad intelectual y derechos morales sobre las composiciones musicales, traducciones, presentaciones, imágenes y grabaciones que incorpore dentro de NEXA Church.</li>
+        </ul>
+      </section>
+
+      <!-- 6. CONTROL, COPIAS Y ELIMINACIÓN -->
+      <section class="space-y-3">
+        <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
+          <span class="text-[#FF1E2D]">6.</span> Control, Copias de Seguridad y Eliminación
+        </h2>
+        <p class="text-sm text-neutral-300 leading-relaxed">
+          Dado que los datos residen en tu equipo:
+        </p>
+        <ul class="list-disc list-inside space-y-1.5 text-xs sm:text-sm text-neutral-300 pl-2">
+          <li><strong>Acceso total:</strong> Puedes exportar o respaldar tus canciones y listas de reproducción en cualquier momento.</li>
+          <li><strong>Eliminación inmediata:</strong> Al desinstalar NEXA Church o eliminar la carpeta de datos de la aplicación, toda la información se borra permanentemente de tu computadora sin dejar copias en la red.</li>
+        </ul>
+      </section>
+
+      <!-- 7. CONTACTO -->
+      <section class="space-y-3 border-t border-white/[0.08] pt-8">
+        <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
+          <span class="text-[#FF1E2D]">7.</span> Contacto de Soporte y Privacidad
+        </h2>
+        <p class="text-sm text-neutral-300 leading-relaxed">
+          Si tienes consultas sobre esta política de privacidad o el funcionamiento del software, puedes comunicarte con el equipo de desarrollo a través de los canales oficiales de <strong>Shalim Technologies</strong>.
+        </p>
+        <div class="pt-2 flex items-center gap-3">
+          <a href="index.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#141519] hover:bg-[#1D1F25] text-white border border-white/10 text-xs font-semibold transition-all">
+            <i class="ph ph-house"></i>
+            <span>Ir a la página principal</span>
+          </a>
+          <a href="terminos.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#141519] hover:bg-[#1D1F25] text-white border border-white/10 text-xs font-semibold transition-all">
+            <i class="ph ph-scales"></i>
+            <span>Ver Términos y Condiciones</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Footer Note -->
+      <div class="pt-6 border-t border-white/[0.05] flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-4">
+        <p>© 2026 NEXA Church • Desarrollado por Shalim Technologies.</p>
+        <p>Garantía de privacidad e integridad para la iglesia.</p>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
