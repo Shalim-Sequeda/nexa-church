@@ -4,6 +4,7 @@ import { Radio } from 'lucide-react';
 import { isTauriEnvironment } from '../../services/tauri';
 import { usePresentation } from '../../stores/presentationStore';
 import { useChurch, churchStore } from '../../stores/churchStore';
+import { checkForAppUpdates } from '../../services/updateService';
 import {
   IconCalendar,
   IconProjector,
@@ -30,8 +31,27 @@ export const TitleBar: React.FC<TitleBarProps> = ({
 }) => {
   const [isMaximized, setIsMaximized] = useState(false);
   const [clock, setClock] = useState<Date>(new Date());
+  const [updateAvailableVersion, setUpdateAvailableVersion] = useState<string | null>(null);
   const presentation = usePresentation();
   const church = useChurch();
+
+  // Comprobación silenciosa de actualizaciones al iniciar el software (sin bloquear nada)
+  useEffect(() => {
+    let isMounted = true;
+    const timer = setTimeout(async () => {
+      try {
+        const res = await checkForAppUpdates();
+        if (isMounted && res.hasUpdate && res.remoteInfo) {
+          setUpdateAvailableVersion(res.remoteInfo.version);
+        }
+      } catch {}
+    }, 4000); // Esperar 4 segundos tras el arranque para no competir con los recursos de inicio
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
+  }, []);
 
   // Reloj en tiempo real cada segundo
   useEffect(() => {
@@ -218,13 +238,21 @@ export const TitleBar: React.FC<TitleBarProps> = ({
           </span>
         </button>
 
-        {/* ABOUT TRIGGER */}
+        {/* ABOUT TRIGGER CON BADGE DE ACTUALIZACIÓN SI HAY NUEVA VERSIÓN */}
         <button
           onClick={onOpenAbout}
-          className="px-2 py-1 text-[9.5px] font-display text-[#71717A] hover:text-[#F4F4F5] hover:bg-[#121214] transition-colors border border-transparent hover:border-[#1C1C1E] rounded-[2px]"
-          title="Acerca de NEXA Church"
+          className="relative px-2 py-1 text-[9.5px] font-display text-[#71717A] hover:text-[#F4F4F5] hover:bg-[#121214] transition-colors border border-transparent hover:border-[#1C1C1E] rounded-[2px] flex items-center gap-1.5"
+          title={updateAvailableVersion ? `Nueva version ${updateAvailableVersion} disponible. Clic para ver detalles.` : "Acerca de NEXA Church"}
         >
-          ABOUT
+          {updateAvailableVersion && (
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          )}
+          <span>ABOUT</span>
+          {updateAvailableVersion && (
+            <span className="text-[8px] font-mono font-bold text-emerald-400 bg-emerald-950/70 border border-emerald-800/50 px-1 py-0.2 rounded">
+              v{updateAvailableVersion}
+            </span>
+          )}
         </button>
 
         {/* CONTROLES DE VENTANA (Respuesta hover instantánea sin arrastre) */}
