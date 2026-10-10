@@ -483,12 +483,22 @@ export const BibleBrowser: React.FC = () => {
 
         {/* 4. Selector de Fondo de Imagen */}
         <div className="flex items-center justify-between px-2.5 py-1.5 bg-[#0F1014] border border-[#1E2029] text-[10px] font-mono rounded shrink-0">
-          <div className="flex items-center gap-1.5 min-w-0">
-            <ImageIcon className="w-3.5 h-3.5 text-[#8E92A2] shrink-0" />
+          <div className="flex items-center gap-2 min-w-0">
+            {bible.backgroundImageUrl ? (
+              <div className="w-6 h-4 rounded overflow-hidden border border-white/20 shrink-0">
+                <img
+                  src={resolveMediaUrl(bible.backgroundImageUrl)}
+                  alt="Fondo activo"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <ImageIcon className="w-3.5 h-3.5 text-[#8E92A2] shrink-0" />
+            )}
             <span className="text-[#6E7282] uppercase tracking-wider shrink-0">FONDO:</span>
             {bible.backgroundImageUrl ? (
-              <span className="text-[#F4F4F5] truncate max-w-[120px]" title={bible.backgroundImageUrl}>
-                {bible.backgroundImageUrl.split(/[\\/]/).pop()}
+              <span className="text-cyan-300 font-sans font-medium truncate max-w-[130px]" title={bible.backgroundImageUrl}>
+                {BACKGROUND_PRESETS.find(p => p.path === bible.backgroundImageUrl)?.name || bible.backgroundImageUrl.split(/[\\/]/).pop()}
               </span>
             ) : (
               <span className="text-[#555866]">Predeterminado (Negro)</span>

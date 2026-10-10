@@ -137,13 +137,14 @@ export function resolveMediaUrl(filePath: string): string {
   const trimmed = filePath.trim();
   if (!trimmed) return '';
 
-  // 1. Si ya es una URL web, blob o data URL, no requiere transformación
+  // 1. Si ya es una URL web, blob, data URL o recurso relativo a la app (/backgrounds/...), no requiere transformación
   if (
     trimmed.startsWith('http://') ||
     trimmed.startsWith('https://') ||
     trimmed.startsWith('blob:') ||
     trimmed.startsWith('data:') ||
-    trimmed.startsWith('asset://')
+    trimmed.startsWith('asset://') ||
+    trimmed.startsWith('/')
   ) {
     return trimmed;
   }

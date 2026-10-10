@@ -3,6 +3,7 @@ import { ChurchMediaFile, openFolderDialog, openFileDialog, scanChurchMedia } fr
 import { Scene } from '../types/church';
 import { churchStore } from './churchStore';
 import { presentationStore } from './presentationStore';
+import { BACKGROUND_PRESETS } from '../data/backgroundPresets';
 
 export interface MediaLibraryState {
   currentFolder: string | null;
@@ -12,10 +13,19 @@ export interface MediaLibraryState {
   isScanning: boolean;
 }
 
+// Convertir los 50 fondos predeterminados en ChurchMediaFile nativos de la aplicación
+const PRESET_MEDIA_ITEMS: ChurchMediaFile[] = BACKGROUND_PRESETS.map((p) => ({
+  id: `preset-${p.id}`,
+  name: `Fondo: ${p.name}`,
+  path: p.path,
+  extension: 'png',
+  size: 500000,
+  media_type: 'image',
+}));
 
 const initialState: MediaLibraryState = {
-  currentFolder: null,
-  items: [],
+  currentFolder: 'Fondos Predeterminados (50)',
+  items: PRESET_MEDIA_ITEMS,
   filterType: 'all',
   searchQuery: '',
   isScanning: false,

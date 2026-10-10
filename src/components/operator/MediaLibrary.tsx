@@ -160,7 +160,7 @@ export const MediaLibrary: React.FC = () => {
               className="group px-2 py-1.5 bg-transparent hover:bg-[#121212] rounded-none transition-all flex items-center justify-between gap-2 select-none"
             >
               <div className="flex items-center gap-2 min-w-0 flex-1">
-                <div className="w-6 h-6 rounded-none bg-[#181818] border border-[#27272A] flex items-center justify-center shrink-0 overflow-hidden">
+                <div className="w-12 h-8 rounded bg-[#181818] border border-[#27272A] flex items-center justify-center shrink-0 overflow-hidden shadow-sm">
                   {item.media_type === 'image' || item.extension.toLowerCase() === 'gif' ? (
                     <img
                       src={resolveMediaUrl(item.path)}
