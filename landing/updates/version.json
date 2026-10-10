@@ -1,12 +1,12 @@
 {
-  "version": "2.0.0",
-  "releaseDate": "2026-10-09",
-  "minRequiredVersion": "1.0.0",
+  "version": "2.0.1",
+  "releaseDate": "2026-10-10",
+  "minRequiredVersion": "2.0.0",
   "downloadUrl": "https://nexa-church.netlify.app/downloads/NEXA_Church_Installer.exe",
   "changelog": [
-    "50 fondos predeterminados organizados por categorias para el motor biblico",
-    "Optimizacion de rendimiento y estabilidad para entornos de culto en vivo",
-    "Soporte completo offline y sistema de actualizacion remota"
+    "50 fondos integrados directamente al Rack Multimedia con vistas previas grandes",
+    "Selector de fondo bíblico con miniatura visual y nombre descriptivo",
+    "Optimizaciones visuales en manual y estabilidad"
   ],
   "critical": false
 }
