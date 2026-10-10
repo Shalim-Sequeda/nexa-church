@@ -105,10 +105,16 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
                     </a>
                   </div>
                 ) : (
-                  <div className="text-center text-[#8E92A2]">
-                    {updateResult.error
-                      ? 'Sin conexion a internet o servidor no disponible.'
-                      : 'El software se encuentra en la version mas reciente (2.0.0).'}
+                  <div className="text-center py-1">
+                    {updateResult.error ? (
+                      <span className="text-zinc-400">
+                        No se encontraron nuevas actualizaciones en este momento.
+                      </span>
+                    ) : (
+                      <span className="text-emerald-400 font-semibold">
+                        NEXA Church se encuentra en la version mas reciente (v{CURRENT_APP_VERSION}).
+                      </span>
+                    )}
                   </div>
                 )}
               </div>
