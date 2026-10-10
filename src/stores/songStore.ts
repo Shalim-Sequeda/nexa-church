@@ -11,6 +11,7 @@ export interface SongStoreState {
   selectedTag: string | null;
   isEditorOpen: boolean;
   editingSong: ChurchSong | null;
+  isImporterOpen: boolean;
   isLoading: boolean;
 }
 
@@ -1009,6 +1010,7 @@ const initialState: SongStoreState = {
   selectedTag: null,
   isEditorOpen: false,
   editingSong: null,
+  isImporterOpen: false,
   isLoading: true,
 };
 
@@ -1138,6 +1140,14 @@ export const songStore = {
 
   closeEditor: () => {
     setState({ isEditorOpen: false, editingSong: null });
+  },
+
+  openImporter: () => {
+    setState({ isImporterOpen: true });
+  },
+
+  closeImporter: () => {
+    setState({ isImporterOpen: false });
   },
 
   saveSong: async (song: ChurchSong): Promise<void> => {

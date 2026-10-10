@@ -1,14 +1,15 @@
 {
-  "version": "2.0.2",
+  "version": "2.0.3",
   "releaseDate": "2026-10-10",
   "minRequiredVersion": "1.0.0",
-  "downloadUrl": "https://github.com/Shalim-Sequeda/nexa-church/releases/download/v2.0.2/NEXA.Church_2.0.2_x64-setup.exe",
+  "downloadUrl": "https://github.com/Shalim-Sequeda/nexa-church/releases/download/v2.0.3/NEXA.Church_2.0.3_x64-setup.exe",
   "changelog": [
-    "Sincronizacion de version unificada v2.0.2 en Ajustes y Acerca de",
-    "Boton de busqueda de actualizacion en panel de Ajustes y en Acerca de",
-    "50 fondos integrados directamente al Rack Multimedia con vistas previas grandes",
-    "Selector de fondo biblico con miniatura visual y nombre claro",
-    "Soporte de imagenes y diagramas restaurados en el manual web"
+    "Importador inteligente de canciones y letras con auto-deteccion de estrofas, coros y puentes",
+    "Filtro automatico de lineas de acordes musicales para proyeccion limpia en el templo",
+    "Division automatica e inteligente de parrafos en diapositivas con limite de lectura",
+    "Previsualizacion en vivo de diapositivas con clasificacion visual por colores",
+    "Boton de importacion rapida desde texto y archivos .txt compatible con Holyrics y la web",
+    "Opcion de guardar directamente en el Cancionero o proyectar de inmediato en el culto"
   ],
   "critical": false
 }

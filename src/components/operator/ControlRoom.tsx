@@ -13,6 +13,7 @@ import { TitleBar } from '../layout/TitleBar';
 import { SceneManager } from './SceneManager';
 import { SongLibrary } from './SongLibrary';
 import { SongEditorModal } from './SongEditorModal';
+import { SongImporterModal } from './SongImporterModal';
 import { BibleBrowser } from './BibleBrowser';
 import { MediaLibrary } from './MediaLibrary';
 import { AnnouncementManager } from './AnnouncementManager';
@@ -133,6 +134,7 @@ export const ControlRoom: React.FC = () => {
 
       {/* Modals */}
       <SongEditorModal />
+      <SongImporterModal />
       <AnnouncementEditor />
 
       <DisplaySelector

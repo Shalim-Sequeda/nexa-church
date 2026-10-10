@@ -9,6 +9,7 @@ import {
   IconEye,
   IconTake,
 } from '../common/NexaIcons';
+import { Upload } from 'lucide-react';
 import { useSongStore, songStore } from '../../stores/songStore';
 import { ChurchSong } from '../../types/church';
 
@@ -92,14 +93,25 @@ export const SongLibrary: React.FC = () => {
           </span>
         </div>
 
-        <button
-          onClick={() => songStore.openEditorForCreate()}
-          className="px-2 py-1 bg-red-600 hover:bg-red-500 text-white text-[10px] font-mono font-bold border border-red-500 rounded-[2px] transition-all flex items-center gap-1 shadow-sm shrink-0"
-          title="Agregar nueva canción al repertorio"
-        >
-          <IconPlus className="w-3 h-3" />
-          <span>NUEVA</span>
-        </button>
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={() => songStore.openImporter()}
+            className="px-2 py-1 bg-[#1A1C26] hover:bg-[#252838] text-neutral-300 hover:text-white text-[10px] font-mono font-bold border border-[#2E3144] rounded-[2px] transition-all flex items-center gap-1 shadow-sm shrink-0"
+            title="Importar canción desde texto o archivo (Auto-detección de estrofas y coros)"
+          >
+            <Upload className="w-3 h-3 text-amber-400" />
+            <span>IMPORTAR</span>
+          </button>
+
+          <button
+            onClick={() => songStore.openEditorForCreate()}
+            className="px-2 py-1 bg-red-600 hover:bg-red-500 text-white text-[10px] font-mono font-bold border border-red-500 rounded-[2px] transition-all flex items-center gap-1 shadow-sm shrink-0"
+            title="Agregar nueva canción al repertorio"
+          >
+            <IconPlus className="w-3 h-3" />
+            <span>NUEVA</span>
+          </button>
+        </div>
       </div>
 
       {/* Search Input */}

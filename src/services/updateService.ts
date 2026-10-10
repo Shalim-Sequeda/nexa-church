@@ -21,7 +21,7 @@ export interface UpdateCheckResult {
   error?: string;
 }
 
-export const CURRENT_APP_VERSION = '2.0.2';
+export const CURRENT_APP_VERSION = '2.0.3';
 
 // Endpoint alojado en Netlify para consulta sin latencia ni costo
 const REMOTE_VERSION_URL = 'https://nexa-church.netlify.app/updates/version.json';
