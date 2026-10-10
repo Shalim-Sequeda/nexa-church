@@ -2,7 +2,7 @@
   "version": "2.0.2",
   "releaseDate": "2026-10-10",
   "minRequiredVersion": "1.0.0",
-  "downloadUrl": "https://nexa-church.netlify.app/downloads/NEXA_Church_Installer.exe",
+  "downloadUrl": "https://github.com/Shalim-Sequeda/nexa-church/releases/download/v2.0.2/NEXA.Church_2.0.2_x64-setup.exe",
   "changelog": [
     "Sincronizacion de version unificada v2.0.2 en Ajustes y Acerca de",
     "Boton de busqueda de actualizacion en panel de Ajustes y en Acerca de",
