@@ -1,6 +1,7 @@
 import React from 'react';
 import { IconSettings, IconProjector, IconKeyboard, IconInfo } from '../common/NexaIcons';
 import { useChurch } from '../../stores/churchStore';
+import { CURRENT_APP_VERSION } from '../../services/updateService';
 
 interface SettingsPanelProps {
   onOpenAbout?: () => void;
@@ -108,8 +109,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
           </div>
         </div>
 
-        {/* Sistema & Versión */}
-        <div className="bg-[#121214] border border-[#222226] p-3 space-y-2">
+        {/* Sistema & Versión conectada al About y Servicio de Actualización */}
+        <div className="bg-[#121214] border border-[#222226] p-3 space-y-2.5">
           <div className="text-[10px] font-mono text-[#A1A1AA] uppercase tracking-wider flex items-center justify-between">
             <span className="flex items-center gap-1.5">
               <IconInfo className="w-3 h-3 text-zinc-400" />
@@ -124,8 +125,19 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
               </button>
             )}
           </div>
-          <div className="text-xs font-mono text-white font-bold">
-            NEXA Church v1.3.2
+          <div className="flex items-center justify-between">
+            <div className="text-xs font-mono text-white font-bold">
+              NEXA Church v{CURRENT_APP_VERSION}
+            </div>
+            {onOpenAbout && (
+              <button
+                onClick={onOpenAbout}
+                className="px-2 py-0.5 bg-[#1C1E28] hover:bg-[#252837] text-cyan-400 border border-cyan-800/40 rounded text-[10px] font-mono transition-colors"
+                title="Comprobar si hay una nueva versión disponible"
+              >
+                Buscar actualización
+              </button>
+            )}
           </div>
           <div className="text-[11px] font-mono text-[#71717A]">
             Desarrollado por SHALIM TECHNOLOGIES

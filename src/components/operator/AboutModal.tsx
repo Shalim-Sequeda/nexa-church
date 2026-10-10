@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { IconClose } from '../common/NexaIcons';
-import { checkForAppUpdates, UpdateCheckResult } from '../../services/updateService';
+import { checkForAppUpdates, UpdateCheckResult, CURRENT_APP_VERSION } from '../../services/updateService';
 
 interface AboutModalProps {
   isOpen: boolean;
@@ -55,8 +55,8 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
               <div className="text-[11px] font-sans font-bold tracking-widest text-zinc-400 uppercase">
                 PRESENTATION SYSTEM
               </div>
-              <div className="text-[11px] font-sans text-[#71717A] pt-0.5">
-                Versión 2.0.0
+              <div className="text-[11px] font-sans text-cyan-400 font-mono pt-0.5">
+                Versión {CURRENT_APP_VERSION}
               </div>
             </div>
           </div>
