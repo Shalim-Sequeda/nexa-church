@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { CURRENT_APP_VERSION } from '../../services/updateService';
 
 interface AppSplashScreenProps {
   progress: number;
@@ -70,7 +71,7 @@ export const AppSplashScreen: React.FC<AppSplashScreenProps> = ({
             Professional Presentation System
           </p>
           <p className="text-[11px] tracking-wider text-zinc-500 pt-0.5">
-            Versión 2.0.0
+            Versión {CURRENT_APP_VERSION}
           </p>
         </div>
 
