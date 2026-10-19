@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "=== Compilando NEXA Church v2.1.1 para Linux ==="
+echo "=== Compilando NEXA Church v2.1.2 para Linux ==="
 npm run build
 npx tauri build --ignore-version-mismatches
 
