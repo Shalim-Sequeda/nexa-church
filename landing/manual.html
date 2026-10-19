@@ -243,7 +243,7 @@
                 Requisitos Mínimos
               </h3>
               <ul class="text-xs space-y-1.5 text-neutral-300">
-                <li>• Sistema Operativo: Windows 10 (64-bit) o Windows 11.</li>
+                <li>• Sistema Operativo: Windows 10/11 (64-bit) o Linux (Ubuntu, Debian, Mint, Pop!_OS, o distro compatible).</li>
                 <li>• Procesador: Intel Core i3 (4ta gen) / AMD Ryzen 3 o superior.</li>
                 <li>• Memoria RAM: 4 GB.</li>
                 <li>• Almacenamiento: 500 MB libres en disco.</li>
@@ -259,7 +259,7 @@
               <ul class="text-xs space-y-1.5 text-neutral-300">
                 <li>• Procesador: Intel Core i5 / AMD Ryzen 5 o superior.</li>
                 <li>• Memoria RAM: 8 GB o superior.</li>
-                <li>• Tarjeta gráfica dedicada o integrada con soporte DirectX 11.</li>
+                <li>• Tarjeta gráfica dedicada o integrada con soporte de aceleración por hardware.</li>
                 <li>• 2 salidas de video para proyector y monitor de retorno (Stage Display).</li>
               </ul>
             </div>
@@ -272,14 +272,34 @@
             <span class="text-[#FF1E2D]">02.</span> Instalación y Primer Inicio
           </h2>
           <p class="leading-relaxed">
-            La instalación de NEXA Church es directa y no requiere bibliotecas complejas adicionales:
+            La instalación de NEXA Church es directa y está disponible para Windows y Linux:
           </p>
-          <ol class="list-decimal list-inside space-y-2 text-sm text-neutral-300 bg-[#0A0B0E] p-5 rounded-xl border border-white/[0.08]">
-            <li>Descarga el instalador oficial <code class="text-[#FF1E2D]">NEXA_Church_Installer.exe</code> desde la página principal.</li>
-            <li>Haz doble clic sobre el archivo ejecutable. Si Windows SmartScreen muestra un aviso, haz clic en <em>"Más información"</em> y luego en <em>"Ejecutar de todas formas"</em>.</li>
-            <li>El instalador configurará automáticamente los archivos de soporte y creará un acceso directo en el Escritorio.</li>
-            <li>Al iniciar, el software cargará automáticamente las versiones bíblicas locales, la biblioteca de alabanza y las plantillas predeterminadas en menos de 2 segundos.</li>
-          </ol>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-neutral-300">
+            <div class="bg-[#0A0B0E] p-5 rounded-xl border border-white/[0.08] space-y-3">
+              <h4 class="font-bold text-white flex items-center gap-2 text-sm">
+                <i class="ph ph-windows-logo text-[#FF1E2D]"></i>
+                Instalación en Windows (.exe)
+              </h4>
+              <ol class="list-decimal list-inside space-y-1.5 text-xs">
+                <li>Descarga el instalador <code class="text-[#FF1E2D]">NEXA.Church_2.1.1_x64-setup.exe</code>.</li>
+                <li>Haz doble clic sobre el instalador y sigue las instrucciones en pantalla.</li>
+                <li>Se creará automáticamente el acceso directo en el Escritorio y en el Menú Inicio.</li>
+              </ol>
+            </div>
+            <div class="bg-[#0A0B0E] p-5 rounded-xl border border-white/[0.08] space-y-3">
+              <h4 class="font-bold text-white flex items-center gap-2 text-sm">
+                <i class="ph ph-terminal-window text-[#FF1E2D]"></i>
+                Instalación en Linux (.deb / .AppImage)
+              </h4>
+              <ol class="list-decimal list-inside space-y-1.5 text-xs">
+                <li><strong>Ubuntu / Debian:</strong> Descarga el paquete <code class="text-[#FF1E2D]">.deb</code> y ejecuta <code class="text-neutral-200 bg-black/50 px-1 py-0.5 rounded">sudo apt install ./NEXA.Church_2.1.1_amd64.deb</code> o abre con el Centro de Software.</li>
+                <li><strong>Universal:</strong> Descarga el archivo <code class="text-[#FF1E2D]">.AppImage</code>, dale permisos de ejecución con clic derecho > Propiedades y ábrelo con doble clic.</li>
+              </ol>
+            </div>
+          </div>
+          <p class="text-xs text-neutral-400">
+            Al iniciar, el software cargará automáticamente las versiones bíblicas locales, la biblioteca de alabanza y las plantillas predeterminadas en menos de 2 segundos.
+          </p>
         </section>
 
         <!-- 3. INTERFAZ Y FLUJO PREVIEW / LIVE -->
