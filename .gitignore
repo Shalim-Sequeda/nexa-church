@@ -33,3 +33,4 @@ landing/assets/*test*.png
 landing/assets/*preview*.png
 landing/assets/*scroll*.png
 dist-packages/
+releases/
