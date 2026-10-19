@@ -142,6 +142,13 @@ export const AUTHENTIC_BIBLE_VERSES: Record<string, string> = {
   'Salmos 23:5': 'Aderezas mesa delante de mí en presencia de mis angustiadores: ungiste mi cabeza con aceite; mi copa está rebosando.',
   'Salmos 23:6': 'Ciertamente el bien y la misericordia me seguirán todos los días de mi vida: y en la casa de Jehová moraré por largos días.',
 
+  // Habacuc 1 (Secuencia Continua de Predicación)
+  'Habacuc 1:1': 'La carga que vio Habacuc profeta.',
+  'Habacuc 1:2': '¿Hasta cuándo, oh Jehová, clamaré, y no oirás; y daré voces a ti a causa de la violencia, y no salvarás?',
+  'Habacuc 1:3': '¿Por qué me haces ver iniquidad, y haces que mire molestia, y destrucción y violencia delante de mí, y habiendo pleito y contienda que se levanta?',
+  'Habacuc 1:4': 'Por lo cual la ley es debilitada, y el juicio no sale verdadero: porque el impío sobrepuja al justo; por tanto, sale torcido el juicio.',
+  'Habacuc 1:5': 'Mirad en las gentes, y ved, y maravillaos pasmosamente; porque obra se obrará en vuestros días, que aun cuando se os contare, no la creeréis.',
+
   // Salmos 91 Completo (1-16)
   'Salmos 91:1': 'El que habita al abrigo del Altísimo, morará bajo la sombra del Omnipotente.',
   'Salmos 91:2': 'Diré yo de Jehová: Esperanza mía, y castillo mío; mi Dios, en quien confiaré.',

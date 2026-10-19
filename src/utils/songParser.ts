@@ -51,72 +51,153 @@ export function isChordLine(line: string): boolean {
   return (chordCount / tokens.length) >= 0.65;
 }
 
+export interface DetectedSectionHeader {
+  type: SongSectionType;
+  label: string;
+  explicitNumber?: number;
+}
+
 /**
- * Detecta si una línea es un encabezado de sección (ej: [Coro], Estrofa 1, Puente, Verse, Chorus)
+ * Detecta si una línea es un encabezado de sección.
+ * Soporta inglés, español y portugués, dentro y fuera de corchetes [], paréntesis (),
+ * con o sin dos puntos :, mayúsculas o minúsculas.
+ * Ejemplos: verse, (verse), [verse], verse 1, Verse 1:, pre-chorus, (pre-chorus),
+ * chorus, [chorus], bridge, puente, coro, estrofa, números aislados (1, 2, [1]), etc.
  */
-export function detectSectionHeader(line: string): { type: SongSectionType; label: string } | null {
-  const clean = line.replace(/^[\[\(\{\s*#*]+|[\]\)\}\s*:]+$/g, '').trim().toLowerCase();
+export function detectSectionHeader(rawLine: string): DetectedSectionHeader | null {
+  const line = rawLine.trim();
+  if (!line) return null;
+
+  // Limpiar corchetes, paréntesis, llaves, dos puntos, asteriscos, guiones decorativos y espacios
+  const clean = line
+    .replace(/^[\s\[\(\{#*=\-–—]+|[\s\]\)\}:#*=\-–—]+$/g, '')
+    .trim()
+    .toLowerCase();
+
   if (!clean) return null;
 
-  // Coro / Chorus
-  if (/^(?:coro|chorus|estribillo)(?:\s*\d+)?$/i.test(clean)) {
-    const num = clean.match(/\d+/)?.[0] || '';
-    return { type: 'chorus', label: num ? `Coro ${num}` : 'Coro' };
+  // Extraer número de sección si existe (ej. "verse 2" -> 2, "estrofa 1" -> 1)
+  const numMatch = clean.match(/\d+/);
+  const explicitNumber = numMatch ? parseInt(numMatch[0], 10) : undefined;
+  const numStr = explicitNumber !== undefined ? `${explicitNumber}` : '';
+
+  // 0. Línea que contiene únicamente un número o indicador de verso (ej: "1", "2", "1.", "2:", "(1)", "[1]", "v1")
+  if (/^(?:\d{1,2}|v\s*\d{1,2})[\.:\-]?$/i.test(clean)) {
+    return {
+      type: 'verse',
+      label: numStr ? `Estrofa ${numStr}` : 'Estrofa 1',
+      explicitNumber,
+    };
   }
 
-  // Pre-Coro
-  if (/^(?:pre-?coro|pre-?chorus)(?:\s*\d+)?$/i.test(clean)) {
-    const num = clean.match(/\d+/)?.[0] || '';
-    return { type: 'pre-chorus', label: num ? `Pre-Coro ${num}` : 'Pre-Coro' };
+  // 1. Pre-Coro / Pre-Chorus / Precoro
+  if (/^pre[\s\-_]?(?:coro|chorus)(?:\s*\d+)?$/i.test(clean)) {
+    return {
+      type: 'pre-chorus',
+      label: numStr ? `Pre-Coro ${numStr}` : 'Pre-Coro',
+      explicitNumber,
+    };
   }
 
-  // Puente / Bridge
-  if (/^(?:puente|bridge)(?:\s*\d+)?$/i.test(clean)) {
-    const num = clean.match(/\d+/)?.[0] || '';
-    return { type: 'bridge', label: num ? `Puente ${num}` : 'Puente' };
+  // 2. Coro / Chorus / Refrain / Estribillo / Refrão / C / C1..C9
+  if (/^(?:coro|chorus|refrain|estribillo|refr[aã]o)(?:\s*\d+)?$/i.test(clean) || /^c\s*\d*$/i.test(clean)) {
+    return {
+      type: 'chorus',
+      label: numStr ? `Coro ${numStr}` : 'Coro',
+      explicitNumber,
+    };
   }
 
-  // Estrofa / Verso / Verse
-  if (/^(?:estrofa|verso|verse|v)(?:\s*\d+)?$/i.test(clean)) {
-    const num = clean.match(/\d+/)?.[0] || '1';
-    return { type: 'verse', label: `Estrofa ${num}` };
+  // 3. Puente / Bridge / Ponte / B / B1..B9
+  if (/^(?:puente|bridge|ponte)(?:\s*\d+)?$/i.test(clean) || /^b\s*\d*$/i.test(clean)) {
+    return {
+      type: 'bridge',
+      label: numStr ? `Puente ${numStr}` : 'Puente',
+      explicitNumber,
+    };
   }
 
-  // Intro
-  if (/^(?:intro|introducci[oó]n)$/i.test(clean)) {
-    return { type: 'intro', label: 'Intro' };
+  // 4. Estrofa / Verso / Verse / Stanza / Parte / Part / V1..V9
+  if (
+    /^(?:estrofa|verso|verse|stanza|parte|part)(?:\s*\d+)?$/i.test(clean) ||
+    /^v\s*\d+$/i.test(clean)
+  ) {
+    return {
+      type: 'verse',
+      label: numStr ? `Estrofa ${numStr}` : 'Estrofa 1',
+      explicitNumber,
+    };
   }
 
-  // Outro / Final / Coda
-  if (/^(?:outro|final|coda|terminacion)$/i.test(clean)) {
-    return { type: 'outro', label: 'Final' };
+  // 5. Intro / Introducción / Introduction
+  if (/^(?:intro|introducci[oó]n|introduction)(?:\s*\d+)?$/i.test(clean)) {
+    return {
+      type: 'intro',
+      label: numStr ? `Intro ${numStr}` : 'Intro',
+      explicitNumber,
+    };
   }
 
-  // Instrumental / Interludio / Solo
-  if (/^(?:instrumental|interludio|interlude|solo)$/i.test(clean)) {
-    return { type: 'interlude', label: 'Instrumental' };
+  // 6. Outro / Final / Ending / Coda / Terminación
+  if (/^(?:outro|final|ending|coda|terminaci[oó]n)(?:\s*\d+)?$/i.test(clean)) {
+    return {
+      type: 'outro',
+      label: numStr ? `Final ${numStr}` : 'Final',
+      explicitNumber,
+    };
   }
 
-  // Tag / Remate
-  if (/^(?:tag|remate)$/i.test(clean)) {
-    return { type: 'tag', label: 'Tag' };
+  // 7. Interlude / Interludio / Instrumental / Solo
+  if (/^(?:interlude|interludio|instrumental|solo)(?:\s*\d+)?$/i.test(clean)) {
+    return {
+      type: 'interlude',
+      label: numStr ? `Interludio ${numStr}` : 'Interludio',
+      explicitNumber,
+    };
+  }
+
+  // 8. Tag / Remate / Hook / Vamp
+  if (/^(?:tag|remate|hook|vamp)(?:\s*\d+)?$/i.test(clean)) {
+    return {
+      type: 'tag',
+      label: numStr ? `Tag ${numStr}` : 'Tag',
+      explicitNumber,
+    };
   }
 
   return null;
 }
 
 /**
- * Divide un arreglo de líneas de letra en diapositivas según el límite especificado.
+ * Divide líneas de letra en diapositivas óptimas.
+ * Respeta los párrafos separados por líneas vacías y divide párrafos largos
+ * en bloques de máximo maxLines líneas (por defecto 4).
  */
-function chunkLinesToSlides(lines: string[], maxLines: number): string[] {
-  if (lines.length === 0) return [];
+export function splitSectionLinesIntoSlides(lines: string[], maxLines: number = 6): string[] {
   const slides: string[] = [];
-  
-  for (let i = 0; i < lines.length; i += maxLines) {
-    const chunk = lines.slice(i, i + maxLines);
-    slides.push(chunk.join('\n'));
+  let currentParagraph: string[] = [];
+
+  const flushParagraph = () => {
+    if (currentParagraph.length === 0) return;
+    if (currentParagraph.length <= maxLines) {
+      slides.push(currentParagraph.join('\n'));
+    } else {
+      for (let i = 0; i < currentParagraph.length; i += maxLines) {
+        slides.push(currentParagraph.slice(i, i + maxLines).join('\n'));
+      }
+    }
+    currentParagraph = [];
+  };
+
+  for (const line of lines) {
+    if (!line.trim()) {
+      flushParagraph();
+    } else {
+      currentParagraph.push(line.trim());
+    }
   }
-  
+  flushParagraph();
+
   return slides;
 }
 
@@ -124,7 +205,7 @@ function chunkLinesToSlides(lines: string[], maxLines: number): string[] {
  * Parsea el texto sin procesar de una canción y genera la estructura completa de ChurchSong.
  */
 export function parseSongText(rawText: string, options: SongParseOptions = {}): ParsedSongResult {
-  const maxLines = Math.max(1, options.maxLinesPerSlide || 4);
+  const maxLines = Math.max(1, options.maxLinesPerSlide || 6);
   const removeChords = options.removeChords !== false;
 
   let title = options.defaultTitle?.trim() || '';
@@ -133,7 +214,7 @@ export function parseSongText(rawText: string, options: SongParseOptions = {}): 
   let originalKey = options.defaultKey || 'G';
 
   const rawLines = rawText.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
-  const filteredLines: { text: string; isHeader: boolean; headerInfo: { type: SongSectionType; label: string } | null }[] = [];
+  const filteredLines: { text: string; isHeader: boolean; headerInfo: DetectedSectionHeader | null }[] = [];
 
   let isFirstNonEmpty = true;
 
@@ -189,16 +270,77 @@ export function parseSongText(rawText: string, options: SongParseOptions = {}): 
     }
   }
 
-  // Agrupar en secciones
+  // Agrupar en secciones con contadores dinámicos inteligentes
   const sections: SongSection[] = [];
+  let verseCounter = 0;
+  let chorusCounter = 0;
+  let bridgeCounter = 0;
+  let preChorusCounter = 0;
+  let introCounter = 0;
+  let outroCounter = 0;
+  let interludeCounter = 0;
+  let tagCounter = 0;
+
   let currentType: SongSectionType = 'verse';
   let currentLabel = 'Estrofa 1';
   let currentLines: string[] = [];
-  let verseCounter = 1;
+  let hasExplicitHeader = false;
+
+  function resolveHeaderLabel(type: SongSectionType, explicitNumber?: number): string {
+    if (type === 'verse') {
+      if (explicitNumber !== undefined) {
+        verseCounter = Math.max(verseCounter, explicitNumber);
+        return `Estrofa ${explicitNumber}`;
+      }
+      verseCounter++;
+      return `Estrofa ${verseCounter}`;
+    }
+    if (type === 'chorus') {
+      if (explicitNumber !== undefined) {
+        chorusCounter = Math.max(chorusCounter, explicitNumber);
+        return `Coro ${explicitNumber}`;
+      }
+      chorusCounter++;
+      return chorusCounter === 1 ? 'Coro' : `Coro ${chorusCounter}`;
+    }
+    if (type === 'bridge') {
+      if (explicitNumber !== undefined) {
+        bridgeCounter = Math.max(bridgeCounter, explicitNumber);
+        return `Puente ${explicitNumber}`;
+      }
+      bridgeCounter++;
+      return bridgeCounter === 1 ? 'Puente' : `Puente ${bridgeCounter}`;
+    }
+    if (type === 'pre-chorus') {
+      if (explicitNumber !== undefined) {
+        preChorusCounter = Math.max(preChorusCounter, explicitNumber);
+        return `Pre-Coro ${explicitNumber}`;
+      }
+      preChorusCounter++;
+      return preChorusCounter === 1 ? 'Pre-Coro' : `Pre-Coro ${preChorusCounter}`;
+    }
+    if (type === 'intro') {
+      introCounter++;
+      return introCounter === 1 ? 'Intro' : `Intro ${introCounter}`;
+    }
+    if (type === 'outro') {
+      outroCounter++;
+      return outroCounter === 1 ? 'Final' : `Final ${outroCounter}`;
+    }
+    if (type === 'interlude') {
+      interludeCounter++;
+      return interludeCounter === 1 ? 'Interludio' : `Interludio ${interludeCounter}`;
+    }
+    if (type === 'tag') {
+      tagCounter++;
+      return tagCounter === 1 ? 'Tag' : `Tag ${tagCounter}`;
+    }
+    return 'Sección';
+  }
 
   function flushCurrentSection() {
     if (currentLines.length === 0) return;
-    const slides = chunkLinesToSlides(currentLines, maxLines);
+    const slides = splitSectionLinesIntoSlides(currentLines, maxLines);
     if (slides.length > 0) {
       const sectionId = `sec-${Date.now()}-${sections.length + 1}`;
       sections.push({
@@ -211,29 +353,35 @@ export function parseSongText(rawText: string, options: SongParseOptions = {}): 
     currentLines = [];
   }
 
-  let inExplicitSection = false;
-
   for (let i = 0; i < filteredLines.length; i++) {
     const item = filteredLines[i];
 
     if (item.isHeader && item.headerInfo) {
       flushCurrentSection();
+      hasExplicitHeader = true;
       currentType = item.headerInfo.type;
-      currentLabel = item.headerInfo.label;
-      inExplicitSection = true;
+      currentLabel = resolveHeaderLabel(item.headerInfo.type, item.headerInfo.explicitNumber);
       continue;
     }
 
     if (!item.text) {
       // Salto de línea vacío
-      if (!inExplicitSection && currentLines.length > 0) {
-        // En modo texto plano sin etiquetas, el doble salto crea una nueva estrofa
+      if (!hasExplicitHeader && currentLines.length > 0) {
+        // En texto plano sin etiquetas, el salto de párrafo crea una nueva estrofa independiente
         flushCurrentSection();
-        verseCounter++;
         currentType = 'verse';
-        currentLabel = `Estrofa ${verseCounter}`;
+        currentLabel = resolveHeaderLabel('verse', undefined);
+      } else if (hasExplicitHeader) {
+        // Dentro de una sección explícita, conservar el salto de párrafo para separar diapositivas
+        currentLines.push('');
       }
       continue;
+    }
+
+    // Si comienza la primera línea de texto plano sin ningún encabezado
+    if (!hasExplicitHeader && currentLines.length === 0 && sections.length === 0 && verseCounter === 0) {
+      currentType = 'verse';
+      currentLabel = resolveHeaderLabel('verse', undefined);
     }
 
     currentLines.push(item.text);
@@ -243,13 +391,15 @@ export function parseSongText(rawText: string, options: SongParseOptions = {}): 
 
   // Si no se encontró ninguna sección pero había texto
   if (sections.length === 0 && rawText.trim().length > 0) {
-    const fallbackLines = rawLines.map((l) => l.trim()).filter((l) => l.length > 0 && (!removeChords || !isChordLine(l)));
+    const fallbackLines = rawLines
+      .map((l) => l.trim())
+      .filter((l) => l.length > 0 && (!removeChords || !isChordLine(l)));
     if (fallbackLines.length > 0) {
       sections.push({
         id: `sec-${Date.now()}-1`,
         type: 'verse',
         label: 'Estrofa 1',
-        slides: chunkLinesToSlides(fallbackLines, maxLines),
+        slides: splitSectionLinesIntoSlides(fallbackLines, maxLines),
       });
     }
   }
@@ -260,13 +410,13 @@ export function parseSongText(rawText: string, options: SongParseOptions = {}): 
     if (firstLine && firstLine.length <= 45) {
       title = firstLine;
     } else {
-      title = 'Nueva Canción Importada';
+      title = 'Nueva Canción';
     }
   } else if (!title) {
-    title = 'Nueva Canción Importada';
+    title = 'Nueva Canción';
   }
 
-  // Generar arreglo predeterminado
+  // Generar arreglo predeterminado automáticamente con la secuencia natural
   const arrangementId = `arr-${Date.now()}-std`;
   const arrangements: SongArrangement[] = [
     {
@@ -295,24 +445,30 @@ export function parseSongText(rawText: string, options: SongParseOptions = {}): 
 
 /**
  * Convierte un resultado parseado en una instancia completa de ChurchSong lista para guardar.
+ * Aplica la tipografía predeterminada de la Biblia (Segoe UI Variable / Sistema Elegante) y fondo de alabanza.
  */
-export function buildChurchSongFromParsed(parsed: ParsedSongResult): ChurchSong {
+export function buildChurchSongFromParsed(
+  parsed: ParsedSongResult,
+  customTheme?: Partial<ChurchSong['theme']>
+): ChurchSong {
   const now = new Date().toISOString();
   return {
     id: `song-${Date.now()}`,
     title: parsed.title,
-    artist: parsed.artist || 'Desconocido',
+    artist: parsed.artist || '',
     author: parsed.author || '',
     originalKey: parsed.originalKey || 'G',
     tempo: 75,
     timeSignature: '4/4',
-    tags: ['Alabanza', 'Importada'],
+    tags: ['Alabanza'],
     theme: {
-      fontFamily: "'Montserrat', sans-serif",
-      fontSize: 44,
+      fontFamily: "'Segoe UI Variable', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+      fontSize: 46,
       textColor: '#FFFFFF',
-      backgroundColor: '#0B0F19',
+      backgroundColor: '#090A0E',
+      backgroundImageUrl: '/backgrounds/worship/worship_ambient_blue.jpg',
       textAlign: 'center',
+      ...customTheme,
     },
     sections: parsed.sections,
     arrangements: parsed.arrangements,

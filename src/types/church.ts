@@ -90,11 +90,20 @@ export interface ChurchSong {
   updatedAt?: string;
 }
 
+export interface SongSlideMeta {
+  index: number;
+  sectionId?: string;
+  sectionType?: SongSectionType;
+  sectionLabel?: string;
+  stanzaNumber?: number;
+}
+
 export interface SongContent {
   title: string;
   author?: string;
   slides: string[];
   activeSlideIndex: number;
+  slidesMeta?: SongSlideMeta[];
   mediaPath?: string; // Optional backing video/audio track
   songId?: string;
   arrangementId?: string;

@@ -280,6 +280,24 @@ export const presentationStore = {
   },
 
   /**
+   * Actualizar una escena que ya está en LIVE (por ejemplo, avanzar de slide o cambiar versículo en vivo).
+   * REGLA ARQUITECTÓNICA SAGRADA: Modificar LIVE JAMÁS toca ni sobreescribe PREVIEW.
+   */
+  updateLiveScene: (scene: Scene) => {
+    setState({ liveScene: scene });
+    emitChurchMessage({
+      type: 'LIVE_UPDATE',
+      scene,
+      isBlackout: state.isBlackout,
+      transition: state.transition,
+      timestamp: Date.now(),
+      mediaLoadId: state.mediaLoadId,
+      backgroundAudio: state.backgroundAudio,
+    });
+    syncBroadcast(scene, state.isBlackout);
+  },
+
+  /**
    * Presentar una escena directamente sin pasar por preview (atajo de operador)
    */
   presentSceneDirectly: (scene: Scene) => {
@@ -303,7 +321,24 @@ export const presentationStore = {
             },
           },
         };
-        presentationStore.presentSceneDirectly(updatedScene);
+        presentationStore.updateLiveScene(updatedScene);
+        return true;
+      }
+    }
+    const preview = state.previewScene;
+    if (preview && preview.type === 'song' && preview.content?.song) {
+      const s = preview.content.song;
+      if (s.slides && s.activeSlideIndex < s.slides.length - 1) {
+        presentationStore.setPreviewScene({
+          ...preview,
+          content: {
+            ...preview.content,
+            song: {
+              ...s,
+              activeSlideIndex: s.activeSlideIndex + 1,
+            },
+          },
+        });
         return true;
       }
     }
@@ -326,8 +361,119 @@ export const presentationStore = {
             },
           },
         };
-        presentationStore.presentSceneDirectly(updatedScene);
+        presentationStore.updateLiveScene(updatedScene);
         return true;
+      }
+    }
+    const preview = state.previewScene;
+    if (preview && preview.type === 'song' && preview.content?.song) {
+      const s = preview.content.song;
+      if (s.slides && s.activeSlideIndex > 0) {
+        presentationStore.setPreviewScene({
+          ...preview,
+          content: {
+            ...preview.content,
+            song: {
+              ...s,
+              activeSlideIndex: s.activeSlideIndex - 1,
+            },
+          },
+        });
+        return true;
+      }
+    }
+    return false;
+  },
+
+  jumpToSongSlide: (index: number): boolean => {
+    const live = state.liveScene;
+    if (live && live.type === 'song' && live.content?.song) {
+      const s = live.content.song;
+      if (s.slides && index >= 0 && index < s.slides.length) {
+        const updatedScene: Scene = {
+          ...live,
+          content: {
+            ...live.content,
+            song: {
+              ...s,
+              activeSlideIndex: index,
+            },
+          },
+        };
+        presentationStore.updateLiveScene(updatedScene);
+        return true;
+      }
+    }
+    const preview = state.previewScene;
+    if (preview && preview.type === 'song' && preview.content?.song) {
+      const s = preview.content.song;
+      if (s.slides && index >= 0 && index < s.slides.length) {
+        presentationStore.setPreviewScene({
+          ...preview,
+          content: {
+            ...preview.content,
+            song: {
+              ...s,
+              activeSlideIndex: index,
+            },
+          },
+        });
+        return true;
+      }
+    }
+    return false;
+  },
+
+  jumpToSongChorus: (): boolean => {
+    const live = state.liveScene;
+    const songContent = (live?.type === 'song' && live.content?.song)
+      ? live.content.song
+      : (state.previewScene?.type === 'song' ? state.previewScene.content?.song : null);
+
+    if (!songContent || !songContent.slides || songContent.slides.length === 0) return false;
+
+    if (songContent.slidesMeta && songContent.slidesMeta.length > 0) {
+      const chorusIndices = songContent.slidesMeta
+        .filter((m) => m.sectionType === 'chorus' || m.sectionLabel?.toLowerCase().includes('coro'))
+        .map((m) => m.index);
+      if (chorusIndices.length > 0) {
+        const nextChorus = chorusIndices.find((idx) => idx > songContent.activeSlideIndex);
+        const target = nextChorus !== undefined ? nextChorus : chorusIndices[0];
+        return presentationStore.jumpToSongSlide(target);
+      }
+    }
+
+    for (let i = 0; i < songContent.slides.length; i++) {
+      if (/\[?coro\]?/i.test(songContent.slides[i])) {
+        return presentationStore.jumpToSongSlide(i);
+      }
+    }
+    return false;
+  },
+
+  jumpToSongVerse: (stanzaNum: number): boolean => {
+    const live = state.liveScene;
+    const songContent = (live?.type === 'song' && live.content?.song)
+      ? live.content.song
+      : (state.previewScene?.type === 'song' ? state.previewScene.content?.song : null);
+
+    if (!songContent || !songContent.slides || songContent.slides.length === 0) return false;
+
+    if (songContent.slidesMeta && songContent.slidesMeta.length > 0) {
+      const match = songContent.slidesMeta.find(
+        (m) =>
+          (m.sectionType === 'verse' && m.stanzaNumber === stanzaNum) ||
+          m.sectionLabel?.toLowerCase().includes(`estrofa ${stanzaNum}`) ||
+          m.sectionLabel?.toLowerCase().includes(`verso ${stanzaNum}`)
+      );
+      if (match) {
+        return presentationStore.jumpToSongSlide(match.index);
+      }
+    }
+
+    for (let i = 0; i < songContent.slides.length; i++) {
+      if (new RegExp(`\\[?(estrofa|verso)\\s*${stanzaNum}\\]?`, 'i').test(songContent.slides[i])) {
+        return presentationStore.jumpToSongSlide(i);
       }
     }
     return false;

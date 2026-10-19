@@ -317,8 +317,8 @@
           <div class="bg-[#111318] p-4 rounded-xl border border-red-500/30 flex items-start gap-3">
             <i class="ph ph-warning-circle text-2xl text-[#FF1E2D] shrink-0 mt-0.5"></i>
             <div class="text-xs text-neutral-300 leading-relaxed">
-              <strong class="text-white block mb-0.5">El botón fundamental: TAKE (o barra espaciadora)</strong>
-              Al hacer clic en <kbd>TAKE</kbd> o presionar la barra espaciadora, el contenido preparado en <strong>PREVIEW</strong> pasa inmediatamente a la pantalla <strong>LIVE</strong> con una transición limpia y sin parpadeos.
+              <strong class="text-white block mb-0.5">El botón fundamental: TAKE (Tecla Enter)</strong>
+              Al presionar <kbd>Enter</kbd> (o hacer clic en el botón <kbd>TAKE</kbd>), el contenido preparado en <strong>PREVIEW</strong> pasa inmediatamente a la pantalla <strong>LIVE</strong> con una transición limpia y sin parpadeos. La barra espaciadora (<kbd>Espacio</kbd>) queda reservada exclusivamente para reproducir o pausar videos y pistas de audio.
             </div>
           </div>
         </section>
@@ -346,35 +346,63 @@
               <li>Haz clic en <strong>Presentar directo a Live</strong> para emitirlo de inmediato, o <strong>A Preview</strong> si deseas verificarlo antes.</li>
             </ol>
           </div>
+
+          <div class="bg-[#111318] p-4 rounded-xl border border-white/10 flex items-start gap-3">
+            <i class="ph ph-lightning text-2xl text-amber-400 shrink-0 mt-0.5"></i>
+            <div class="text-xs text-neutral-300 leading-relaxed">
+              <strong class="text-white block mb-0.5">Lectura Bíblica Continua durante la Predicación (Sin tocar el ratón):</strong>
+              Cuando el pastor predica sobre un pasaje de varios versículos (por ejemplo, <em>Habacuc 1:1 al 10</em>), no necesitas volver a buscar ni crear escenas individuales: simplemente proyecta el versículo inicial (v1) y luego presiona las flechas <kbd>→</kbd> o <kbd>↓</kbd> (o <kbd>AvPág</kbd>) en tu teclado para avanzar automáticamente versículo tras versículo en vivo al compás del orador. Para retroceder, presiona <kbd>←</kbd> o <kbd>↑</kbd>.
+            </div>
+          </div>
         </section>
 
         <!-- 5. GESTIÓN DE ALABANZAS Y LETRAS -->
         <section id="canciones" class="space-y-4">
           <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
-            <span class="text-[#FF1E2D]">05.</span> Gestión de Alabanzas, Letras y Acordes
+            <span class="text-[#FF1E2D]">05.</span> Gestión de Alabanzas, Letras y Flujo Holyrics
           </h2>
           <p class="leading-relaxed">
-            El motor de canciones de NEXA Church permite proyectar letras con alta legibilidad mientras los músicos pueden consultar las notas en la pantalla de retorno.
+            El motor de canciones de NEXA Church combina la velocidad operativa de Holyrics con proyección panorámica 16:9 en alta definición y fondos visuales exclusivos de adoración.
           </p>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-neutral-300">
             <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
               <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
-                <i class="ph ph-text-t text-[#FF1E2D]"></i>
-                Estructura por Secciones
+                <i class="ph ph-list-dashes text-[#FF1E2D]"></i>
+                Listado Limpio y Apartado Exclusivo
               </h3>
               <p class="leading-relaxed">
-                Cada canción se divide automáticamente en bloques: <code>[Estrofa 1]</code>, <code>[Coro]</code>, <code>[Puente]</code>, etc. Durante la adoración, puedes saltar directamente al Coro con las flechas o haciendo clic en el bloque sin tener que pasar por toda la canción.
+                El cancionero presenta un listado despejado que muestra únicamente el título de la canción, artista y tono. Al hacer clic sobre cualquier canción, se abre su <strong>Apartado Exclusivo</strong> con la matriz completa de diapositivas organizadas por estrofas, coros y puentes.
               </p>
             </div>
 
             <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
               <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
-                <i class="ph ph-music-notes-simple text-[#FF1E2D]"></i>
-                Transposición de Acordes
+                <i class="ph ph-image text-cyan-400"></i>
+                Galería Ampliada de Fondos de Adoración
               </h3>
               <p class="leading-relaxed">
-                Si el equipo de alabanza cambia el tono de la canción en el último minuto, utiliza el selector de tono (+1 / -1 semitonos) para transponer todas las notas instantáneamente para el Stage Display.
+                Incorpora una colección dedicada de fondos cinemáticos 16:9 (niebla azul con rayos dorados, nebulosas profundas, glorias doradas y santuarios etéreos) diseñados con contraste oscuro central para máxima legibilidad tipográfica. Permite cambiar el fondo en 1 clic o cargar imágenes locales desde la PC.
+              </p>
+            </div>
+
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
+              <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                <i class="ph ph-keyboard text-amber-400"></i>
+                Atajos de Teclado Aislados (<kbd>C</kbd>, <kbd>1-9</kbd>, <kbd>P</kbd>)
+              </h3>
+              <p class="leading-relaxed">
+                Al estar en el Apartado Exclusivo de una canción, los atajos operan estrictamente sobre esa canción sin interferir con otros Cues: <kbd>C</kbd> salta directo al Coro, <kbd>1-9</kbd> a las Estrofas correspondientes, <kbd>P</kbd> al Puente, <kbd>→</kbd> / <kbd>↓</kbd> avanzan diapositivas, <kbd>Enter</kbd> ejecuta el pase TAKE a Live y <kbd>Esc</kbd> regresa al listado.
+              </p>
+            </div>
+
+            <div class="bg-[#0A0B0E] p-4 rounded-xl border border-white/[0.08]">
+              <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                <i class="ph ph-cards text-purple-400"></i>
+                Cues Unificados en Producción
+              </h3>
+              <p class="leading-relaxed">
+                Al agregar una canción al orden de culto con <em>"+ CUE"</em>, se inserta como un único elemento consolidado en la lista de producción, evitando fragmentar el servicio en múltiples escenas y manteniendo la pauta pastoral ordenada.
               </p>
             </div>
           </div>
@@ -518,53 +546,53 @@
               </thead>
               <tbody class="divide-y divide-white/[0.05] text-neutral-300">
                 <tr>
-                  <td class="py-2.5 px-4"><kbd>Espacio</kbd> o <kbd>Enter</kbd></td>
-                  <td class="py-2.5 px-4 font-medium text-white">Ejecutar TAKE (Preview → Live)</td>
-                  <td class="py-2.5 px-4">Global</td>
+                  <td class="py-2.5 px-4 font-mono font-bold text-white"><kbd>Enter</kbd></td>
+                  <td class="py-2.5 px-4 font-medium text-white">Ejecutar TAKE (Enviar Preview → Live al instante)</td>
+                  <td class="py-2.5 px-4 text-emerald-400">Salida Principal</td>
                 </tr>
                 <tr>
-                  <td class="py-2.5 px-4"><kbd>→</kbd> / <kbd>↓</kbd></td>
-                  <td class="py-2.5 px-4">Avanzar a la siguiente diapositiva / verso</td>
-                  <td class="py-2.5 px-4">Canciones / Biblia</td>
+                  <td class="py-2.5 px-4 font-mono"><kbd>→</kbd> / <kbd>↓</kbd> / <kbd>AvPág</kbd></td>
+                  <td class="py-2.5 px-4">Avanzar a la siguiente diapositiva de alabanza, siguiente versículo bíblico continuo, o siguiente escena del culto</td>
+                  <td class="py-2.5 px-4">Alabanza / Biblia / Cues</td>
                 </tr>
                 <tr>
-                  <td class="py-2.5 px-4"><kbd>←</kbd> / <kbd>↑</kbd></td>
-                  <td class="py-2.5 px-4">Retroceder a la diapositiva anterior</td>
-                  <td class="py-2.5 px-4">Canciones / Biblia</td>
+                  <td class="py-2.5 px-4 font-mono"><kbd>←</kbd> / <kbd>↑</kbd> / <kbd>RePág</kbd></td>
+                  <td class="py-2.5 px-4">Retroceder a la diapositiva anterior de alabanza, versículo bíblico anterior, o escena previa</td>
+                  <td class="py-2.5 px-4">Alabanza / Biblia / Cues</td>
                 </tr>
                 <tr>
-                  <td class="py-2.5 px-4"><kbd>B</kbd></td>
-                  <td class="py-2.5 px-4 font-semibold text-red-400">Blackout (Pantalla Negra Inmediata)</td>
-                  <td class="py-2.5 px-4">Emergencia en vivo</td>
+                  <td class="py-2.5 px-4 font-mono font-bold text-amber-400"><kbd>C</kbd></td>
+                  <td class="py-2.5 px-4 font-semibold text-white">Saltar instantáneamente al Coro de la canción activa</td>
+                  <td class="py-2.5 px-4 text-amber-300">Alabanza en vivo</td>
                 </tr>
                 <tr>
-                  <td class="py-2.5 px-4"><kbd>C</kbd></td>
-                  <td class="py-2.5 px-4 font-semibold text-yellow-400">Clear Text (Borrar texto, mantener fondo)</td>
-                  <td class="py-2.5 px-4">Oración / Ministración</td>
+                  <td class="py-2.5 px-4 font-mono font-bold text-amber-400"><kbd>1</kbd> al <kbd>9</kbd></td>
+                  <td class="py-2.5 px-4 font-semibold text-white">Saltar directamente a la Estrofa 1, 2, 3... de la canción activa</td>
+                  <td class="py-2.5 px-4 text-amber-300">Alabanza en vivo</td>
                 </tr>
                 <tr>
-                  <td class="py-2.5 px-4"><kbd>F1</kbd></td>
-                  <td class="py-2.5 px-4">Abrir Motor Bíblico</td>
-                  <td class="py-2.5 px-4">Navegación</td>
+                  <td class="py-2.5 px-4 font-mono"><kbd>Espacio</kbd></td>
+                  <td class="py-2.5 px-4">Reproducir / Pausar video o pista de audio activa en vivo</td>
+                  <td class="py-2.5 px-4">Multimedia / Fondo</td>
                 </tr>
                 <tr>
-                  <td class="py-2.5 px-4"><kbd>F2</kbd></td>
-                  <td class="py-2.5 px-4">Abrir Biblioteca de Alabanza</td>
-                  <td class="py-2.5 px-4">Navegación</td>
+                  <td class="py-2.5 px-4 font-mono"><kbd>B</kbd></td>
+                  <td class="py-2.5 px-4 font-semibold text-red-400">Blackout (Pantalla Negra Inmediata sin desconectar el proyector)</td>
+                  <td class="py-2.5 px-4 text-red-400">Emergencia en vivo</td>
                 </tr>
                 <tr>
-                  <td class="py-2.5 px-4"><kbd>F3</kbd></td>
-                  <td class="py-2.5 px-4">Abrir Galería Multimedia</td>
-                  <td class="py-2.5 px-4">Navegación</td>
+                  <td class="py-2.5 px-4 font-mono"><kbd>P</kbd></td>
+                  <td class="py-2.5 px-4">Seleccionar o enfocar la escena en Preview</td>
+                  <td class="py-2.5 px-4">Operación</td>
                 </tr>
                 <tr>
-                  <td class="py-2.5 px-4"><kbd>F4</kbd></td>
-                  <td class="py-2.5 px-4">Configurar Pantallas y Stage Display</td>
-                  <td class="py-2.5 px-4">Ajustes</td>
+                  <td class="py-2.5 px-4 font-mono"><kbd>L</kbd></td>
+                  <td class="py-2.5 px-4">Seleccionar o enfocar la escena activa en Live</td>
+                  <td class="py-2.5 px-4">Operación</td>
                 </tr>
                 <tr>
-                  <td class="py-2.5 px-4"><kbd>Esc</kbd></td>
-                  <td class="py-2.5 px-4">Cerrar modales o salir de pantalla completa</td>
+                  <td class="py-2.5 px-4 font-mono"><kbd>Esc</kbd></td>
+                  <td class="py-2.5 px-4">Cerrar modales o cancelaciones</td>
                   <td class="py-2.5 px-4">Global</td>
                 </tr>
               </tbody>

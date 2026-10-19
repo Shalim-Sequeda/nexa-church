@@ -1,0 +1,498 @@
+{
+  "id": "proj-1791686783282",
+  "name": "CULTO — DOMINGO 11 DE OCTUBRE 2026",
+  "date": "2026-10-11",
+  "eventType": "culto",
+  "groups": [
+    {
+      "id": "grp-bienvenida",
+      "name": "BIENVENIDA",
+      "color": "#71717A",
+      "order": 0
+    },
+    {
+      "id": "grp-alabanza",
+      "name": "ALABANZA",
+      "color": "#A1A1AA",
+      "order": 1
+    },
+    {
+      "id": "grp-palabra",
+      "name": "PALABRA",
+      "color": "#10B981",
+      "order": 2
+    },
+    {
+      "id": "grp-ofrenda",
+      "name": "OFRENDA",
+      "color": "#F59E0B",
+      "order": 3
+    },
+    {
+      "id": "grp-anuncios",
+      "name": "ANUNCIOS",
+      "color": "#D4D4D8",
+      "order": 4
+    },
+    {
+      "id": "grp-despedida",
+      "name": "DESPEDIDA",
+      "color": "#52525B",
+      "order": 5
+    }
+  ],
+  "scenes": [
+    {
+      "id": "sc-1792332880816-0bwy",
+      "title": "Bienvenida MGD",
+      "type": "announcement",
+      "groupId": "grp-palabra",
+      "order": 0,
+      "style": {
+        "fontSize": 46,
+        "textColor": "#F8FAFC",
+        "backgroundColor": "#050505",
+        "textAlign": "center",
+        "textShadow": true,
+        "fontWeight": "bold",
+        "transition": "cut",
+        "aspectRatio": "16:9"
+      },
+      "content": {
+        "announcement": {
+          "title": "Bienvenida MGD",
+          "announcement": {
+            "id": "ann-1791686914892",
+            "name": "Bienvenida MGD",
+            "background": {
+              "type": "image",
+              "filePath": "C:\\Users\\Shalim\\Desktop\\Nexa_Church\\Bienvenida a Manantial.png"
+            },
+            "layers": [],
+            "createdAt": "2026-10-11T02:48:34.892Z",
+            "updatedAt": "2026-10-18T14:14:32.920Z"
+          }
+        }
+      }
+    },
+    {
+      "id": "sc-1792274882241-j6gh",
+      "title": "Derramo el perfume pista",
+      "type": "video",
+      "groupId": "grp-palabra",
+      "order": 1,
+      "style": {
+        "fontSize": 46,
+        "textColor": "#F8FAFC",
+        "backgroundColor": "#000000",
+        "textAlign": "center",
+        "textShadow": true,
+        "fontWeight": "bold",
+        "transition": "cut",
+        "aspectRatio": "16:9"
+      },
+      "content": {
+        "media": {
+          "filePath": "C:\\Users\\Shalim\\Desktop\\Pista\\Derramo el perfume pista.mp4",
+          "fileName": "Derramo el perfume pista.mp4",
+          "mediaType": "video",
+          "duration": null,
+          "loop": true
+        }
+      }
+    },
+    {
+      "id": "sc-1792278722735-pcfu",
+      "title": "VIENTOS DE GLORIA  - New Wine ( Pista )",
+      "type": "video",
+      "groupId": "grp-palabra",
+      "order": 2,
+      "style": {
+        "fontSize": 46,
+        "textColor": "#F8FAFC",
+        "backgroundColor": "#000000",
+        "textAlign": "center",
+        "textShadow": true,
+        "fontWeight": "bold",
+        "transition": "cut",
+        "aspectRatio": "16:9"
+      },
+      "content": {
+        "media": {
+          "filePath": "C:\\Users\\Shalim\\Desktop\\Pista\\VIENTOS DE GLORIA  - New Wine ( Pista ).mp4",
+          "fileName": "VIENTOS DE GLORIA  - New Wine ( Pista ).mp4",
+          "mediaType": "video",
+          "duration": null,
+          "loop": true
+        }
+      }
+    },
+    {
+      "id": "sc-1792274985014-ldna",
+      "title": "Santo es el que Vive Pista",
+      "type": "video",
+      "groupId": "grp-palabra",
+      "order": 3,
+      "style": {
+        "fontSize": 46,
+        "textColor": "#F8FAFC",
+        "backgroundColor": "#000000",
+        "textAlign": "center",
+        "textShadow": true,
+        "fontWeight": "bold",
+        "transition": "cut",
+        "aspectRatio": "16:9"
+      },
+      "content": {
+        "media": {
+          "filePath": "C:\\Users\\Shalim\\Desktop\\Pista\\Santo es el que Vive Pista.mp4",
+          "fileName": "Santo es el que Vive Pista.mp4",
+          "mediaType": "video",
+          "duration": 633.115,
+          "loop": true
+        }
+      }
+    },
+    {
+      "id": "sc-1792274826049-01ix",
+      "title": "El vive pista",
+      "type": "video",
+      "groupId": "grp-palabra",
+      "order": 4,
+      "style": {
+        "fontSize": 46,
+        "textColor": "#F8FAFC",
+        "backgroundColor": "#000000",
+        "textAlign": "center",
+        "textShadow": true,
+        "fontWeight": "bold",
+        "transition": "cut",
+        "aspectRatio": "16:9"
+      },
+      "content": {
+        "media": {
+          "filePath": "C:\\Users\\Shalim\\Desktop\\Pista\\El vive pista.mp4",
+          "fileName": "El vive pista.mp4",
+          "mediaType": "video",
+          "duration": null,
+          "loop": true
+        }
+      }
+    },
+    {
+      "id": "sc-1792331994546-8vp0",
+      "title": "(Karaoke) Libre Soy - Barak Ft. Alex Campos _ HD",
+      "type": "video",
+      "groupId": "grp-palabra",
+      "order": 5,
+      "style": {
+        "fontSize": 46,
+        "textColor": "#F8FAFC",
+        "backgroundColor": "#000000",
+        "textAlign": "center",
+        "textShadow": true,
+        "fontWeight": "bold",
+        "transition": "cut",
+        "aspectRatio": "16:9"
+      },
+      "content": {
+        "media": {
+          "filePath": "C:\\Users\\Shalim\\Desktop\\Pista\\(Karaoke) Libre Soy - Barak Ft. Alex Campos _ HD.mp4",
+          "fileName": "(Karaoke) Libre Soy - Barak Ft. Alex Campos _ HD.mp4",
+          "mediaType": "video",
+          "duration": null,
+          "loop": true
+        }
+      }
+    },
+    {
+      "id": "sc-1791687129739-v1pj",
+      "title": "Salida Manantial",
+      "type": "image",
+      "groupId": "grp-palabra",
+      "order": 6,
+      "style": {
+        "fontSize": 46,
+        "textColor": "#F8FAFC",
+        "backgroundColor": "#000000",
+        "textAlign": "center",
+        "textShadow": true,
+        "fontWeight": "bold",
+        "transition": "cut",
+        "aspectRatio": "16:9"
+      },
+      "content": {
+        "media": {
+          "filePath": "C:\\Users\\Shalim\\Desktop\\Nexa_Church\\Salida Manantial.png",
+          "fileName": "Salida Manantial.png",
+          "mediaType": "image",
+          "loop": false
+        }
+      }
+    },
+    {
+      "id": "sc-1792338423398-g5oh",
+      "title": "Digno - Instrumental",
+      "type": "song",
+      "groupId": "grp-palabra",
+      "order": 7,
+      "style": {
+        "fontSize": 46,
+        "textColor": "#F8FAFC",
+        "backgroundColor": "#000000",
+        "textAlign": "center",
+        "textShadow": true,
+        "fontWeight": "bold",
+        "transition": "cut",
+        "aspectRatio": "16:9"
+      },
+      "content": {
+        "media": {
+          "filePath": "C:\\Users\\Shalim\\Desktop\\Pista\\Digno - Instrumental.mp3",
+          "fileName": "Digno - Instrumental.mp3",
+          "mediaType": "audio",
+          "duration": 3470.576,
+          "loop": false
+        },
+        "song": {
+          "title": "Digno - Instrumental",
+          "slides": [
+            "Digno - Instrumental"
+          ],
+          "activeSlideIndex": 0,
+          "mediaPath": "C:\\Users\\Shalim\\Desktop\\Pista\\Digno - Instrumental.mp3"
+        }
+      }
+    },
+    {
+      "id": "sc-1792339803126-dv0p",
+      "title": "Israel & New Breed - Campfire Coritos (Official Video)",
+      "type": "song",
+      "groupId": "grp-palabra",
+      "order": 8,
+      "style": {
+        "fontSize": 46,
+        "textColor": "#F8FAFC",
+        "backgroundColor": "#000000",
+        "textAlign": "center",
+        "textShadow": true,
+        "fontWeight": "bold",
+        "transition": "cut",
+        "aspectRatio": "16:9"
+      },
+      "content": {
+        "media": {
+          "filePath": "C:\\Users\\Shalim\\Desktop\\Pista\\Israel & New Breed - Campfire Coritos (Official Video).mp3",
+          "fileName": "Israel & New Breed - Campfire Coritos (Official Video).mp3",
+          "mediaType": "audio",
+          "duration": 522.057,
+          "loop": false
+        },
+        "song": {
+          "title": "Israel & New Breed - Campfire Coritos (Official Video)",
+          "slides": [
+            "Israel & New Breed - Campfire Coritos (Official Video)"
+          ],
+          "activeSlideIndex": 0,
+          "mediaPath": "C:\\Users\\Shalim\\Desktop\\Pista\\Israel & New Breed - Campfire Coritos (Official Video).mp3"
+        }
+      }
+    },
+    {
+      "id": "sc-1792368997614-0-5hks",
+      "title": "[Estrofa 1] A Dios Sea la Gloria",
+      "type": "song",
+      "groupId": "grp-alabanza",
+      "order": 9,
+      "style": {
+        "fontSize": 44,
+        "textColor": "#FFFFFF",
+        "backgroundColor": "#0B0F19",
+        "textAlign": "center",
+        "textShadow": true,
+        "fontWeight": "bold",
+        "transition": "fade",
+        "fontFamily": "'Montserrat', sans-serif",
+        "backgroundImageUrl": "/backgrounds/worship/w7.png"
+      },
+      "content": {
+        "song": {
+          "title": "A Dios Sea la Gloria",
+          "author": "Andraé Crouch / Himnario",
+          "slides": [
+            "¿Cómo agradecer tantas cosas que hiciste por mí?\nCosas tan maravillosas que no puedo comprender;\nLas voces de millones de ángeles no podrían expresar,\nTodo lo que soy y lo que espero ser, se lo debo todo a Él."
+          ],
+          "activeSlideIndex": 0,
+          "songId": "song-a-dios-sea-la-gloria",
+          "arrangementId": "arr-ag-std",
+          "sectionId": "sec-ag-v1",
+          "sectionLabel": "Estrofa 1",
+          "sectionType": "verse"
+        }
+      }
+    },
+    {
+      "id": "sc-1792368997614-1-gv37",
+      "title": "[Coro] A Dios Sea la Gloria",
+      "type": "song",
+      "groupId": "grp-alabanza",
+      "order": 10,
+      "style": {
+        "fontSize": 44,
+        "textColor": "#FFFFFF",
+        "backgroundColor": "#0B0F19",
+        "textAlign": "center",
+        "textShadow": true,
+        "fontWeight": "bold",
+        "transition": "fade",
+        "fontFamily": "'Montserrat', sans-serif",
+        "backgroundImageUrl": "/backgrounds/worship/w7.png"
+      },
+      "content": {
+        "song": {
+          "title": "A Dios Sea la Gloria",
+          "author": "Andraé Crouch / Himnario",
+          "slides": [
+            "A Dios sea la gloria, a Dios sea la gloria,\nA Dios sea la gloria por lo que Él ha hecho.\nCon su sangre me ha lavado, su poder me ha transformado,\nA Dios sea la gloria por lo que Él ha hecho."
+          ],
+          "activeSlideIndex": 0,
+          "songId": "song-a-dios-sea-la-gloria",
+          "arrangementId": "arr-ag-std",
+          "sectionId": "sec-ag-c",
+          "sectionLabel": "Coro",
+          "sectionType": "chorus"
+        }
+      }
+    },
+    {
+      "id": "sc-1792368997614-2-zjrx",
+      "title": "[Coro] A Dios Sea la Gloria",
+      "type": "song",
+      "groupId": "grp-alabanza",
+      "order": 11,
+      "style": {
+        "fontSize": 44,
+        "textColor": "#FFFFFF",
+        "backgroundColor": "#0B0F19",
+        "textAlign": "center",
+        "textShadow": true,
+        "fontWeight": "bold",
+        "transition": "fade",
+        "fontFamily": "'Montserrat', sans-serif",
+        "backgroundImageUrl": "/backgrounds/worship/w7.png"
+      },
+      "content": {
+        "song": {
+          "title": "A Dios Sea la Gloria",
+          "author": "Andraé Crouch / Himnario",
+          "slides": [
+            "A Dios sea la gloria, a Dios sea la gloria,\nA Dios sea la gloria por lo que Él ha hecho.\nCon su sangre me ha lavado, su poder me ha transformado,\nA Dios sea la gloria por lo que Él ha hecho."
+          ],
+          "activeSlideIndex": 0,
+          "songId": "song-a-dios-sea-la-gloria",
+          "arrangementId": "arr-ag-std",
+          "sectionId": "sec-ag-c",
+          "sectionLabel": "Coro",
+          "sectionType": "chorus"
+        }
+      }
+    },
+    {
+      "id": "sc-1792369043581-0-lxn0",
+      "title": "[Estrofa] Al Que Está Sentado en el Trono",
+      "type": "song",
+      "groupId": "grp-alabanza",
+      "order": 12,
+      "style": {
+        "fontSize": 46,
+        "textColor": "#FFFFFF",
+        "backgroundColor": "#0B0F19",
+        "textAlign": "center",
+        "textShadow": true,
+        "fontWeight": "bold",
+        "transition": "fade",
+        "fontFamily": "'Montserrat', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+      },
+      "content": {
+        "song": {
+          "title": "Al Que Está Sentado en el Trono",
+          "author": "Marcos Brunet",
+          "slides": [
+            "Quiero conocerte cada día más a ti,\nEstar en tu presencia y adorar.\nRevélame tu gloria, te quiero contemplar,\nTu amor sobrepasa todo entendimiento."
+          ],
+          "activeSlideIndex": 0,
+          "songId": "song-al-que-esta-sentado",
+          "arrangementId": "arr-as-std",
+          "sectionId": "sec-as-v1",
+          "sectionLabel": "Estrofa",
+          "sectionType": "verse"
+        }
+      }
+    },
+    {
+      "id": "sc-1792369043581-1-ansz",
+      "title": "[Coro] Al Que Está Sentado en el Trono",
+      "type": "song",
+      "groupId": "grp-alabanza",
+      "order": 13,
+      "style": {
+        "fontSize": 46,
+        "textColor": "#FFFFFF",
+        "backgroundColor": "#0B0F19",
+        "textAlign": "center",
+        "textShadow": true,
+        "fontWeight": "bold",
+        "transition": "fade",
+        "fontFamily": "'Montserrat', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+      },
+      "content": {
+        "song": {
+          "title": "Al Que Está Sentado en el Trono",
+          "author": "Marcos Brunet",
+          "slides": [
+            "Al que está sentado en el trono,\nAl que vive para siempre y siempre,\nSea la gloria, sea la honra y el poder,\nSea la gloria, sea la honra y el poder."
+          ],
+          "activeSlideIndex": 0,
+          "songId": "song-al-que-esta-sentado",
+          "arrangementId": "arr-as-std",
+          "sectionId": "sec-as-c",
+          "sectionLabel": "Coro",
+          "sectionType": "chorus"
+        }
+      }
+    },
+    {
+      "id": "sc-1792369043581-2-qp7m",
+      "title": "[Coro] Al Que Está Sentado en el Trono",
+      "type": "song",
+      "groupId": "grp-alabanza",
+      "order": 14,
+      "style": {
+        "fontSize": 46,
+        "textColor": "#FFFFFF",
+        "backgroundColor": "#0B0F19",
+        "textAlign": "center",
+        "textShadow": true,
+        "fontWeight": "bold",
+        "transition": "fade",
+        "fontFamily": "'Montserrat', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+      },
+      "content": {
+        "song": {
+          "title": "Al Que Está Sentado en el Trono",
+          "author": "Marcos Brunet",
+          "slides": [
+            "Al que está sentado en el trono,\nAl que vive para siempre y siempre,\nSea la gloria, sea la honra y el poder,\nSea la gloria, sea la honra y el poder."
+          ],
+          "activeSlideIndex": 0,
+          "songId": "song-al-que-esta-sentado",
+          "arrangementId": "arr-as-std",
+          "sectionId": "sec-as-c",
+          "sectionLabel": "Coro",
+          "sectionType": "chorus"
+        }
+      }
+    }
+  ],
+  "updatedAt": "2026-10-19T00:17:23.581Z"
+}

@@ -594,11 +594,10 @@ export const bibleStore = {
     bibleStore.setBackgroundImage(null);
   },
 
-  createBibleScene: (): Scene | null => {
+  createBibleScene: (): Scene => {
     const { selectedBook, selectedChapter, selectedVerse, activeVerseText, currentVersion, backgroundImageUrl } = state;
-    if (!activeVerseText) return null;
-
     const reference = `${selectedBook.name} ${selectedChapter}:${selectedVerse}`;
+    const displayText = activeVerseText || `${reference} (${currentVersion.shortName})`;
 
     return {
       id: `sc-bible-${Date.now()}`,
@@ -622,7 +621,7 @@ export const bibleStore = {
           chapter: selectedChapter,
           verse: selectedVerse,
           reference,
-          text: activeVerseText,
+          text: displayText,
         },
       },
     };
@@ -647,6 +646,115 @@ export const bibleStore = {
     if (scene) {
       presentationStore.presentSceneDirectly(scene);
     }
+  },
+
+  nextVerseLive: (): boolean => {
+    const live = presentationStore.getSnapshot().liveScene;
+    const isBibleLive = live && live.type === 'bible' && live.content.bible;
+
+    const preview = presentationStore.getSnapshot().previewScene;
+    const isBiblePreview = preview && preview.type === 'bible' && preview.content.bible;
+
+    if (!isBibleLive && !isBiblePreview) {
+      return false;
+    }
+
+    const currentBookName = (isBibleLive ? live.content.bible?.book : preview?.content.bible?.book) || state.selectedBook.name;
+    const currentChapter = (isBibleLive ? live.content.bible?.chapter : preview?.content.bible?.chapter) || state.selectedChapter;
+    const currentVerse = (isBibleLive ? live.content.bible?.verse : preview?.content.bible?.verse) || state.selectedVerse;
+
+    const book = BIBLE_BOOKS.find((b) => b.name === currentBookName) || state.selectedBook;
+    const customVerses = state.isCustomVersion ? state.customVersions[state.currentVersion.id]?.verses : undefined;
+    const maxVerses = getChapterVerseCount(book.name, currentChapter, customVerses);
+
+    let nextChapter = currentChapter;
+    let nextVerse = currentVerse + 1;
+
+    if (nextVerse > maxVerses) {
+      if (currentChapter < book.chapters) {
+        nextChapter = currentChapter + 1;
+        nextVerse = 1;
+      } else {
+        nextVerse = maxVerses;
+      }
+    }
+
+    const text = getAuthenticVerseText(book.name, nextChapter, nextVerse, customVerses);
+    setState({
+      selectedBook: book,
+      selectedChapter: nextChapter,
+      selectedVerse: nextVerse,
+      activeVerseText: text,
+      searchError: null,
+    });
+
+    const newScene = bibleStore.createBibleScene();
+    if (!newScene) return false;
+
+    if (isBibleLive) {
+      presentationStore.presentSceneDirectly(newScene);
+      if (isBiblePreview) {
+        presentationStore.setPreviewScene(newScene);
+      }
+    } else if (isBiblePreview) {
+      presentationStore.setPreviewScene(newScene);
+    }
+
+    return true;
+  },
+
+  previousVerseLive: (): boolean => {
+    const live = presentationStore.getSnapshot().liveScene;
+    const isBibleLive = live && live.type === 'bible' && live.content.bible;
+
+    const preview = presentationStore.getSnapshot().previewScene;
+    const isBiblePreview = preview && preview.type === 'bible' && preview.content.bible;
+
+    if (!isBibleLive && !isBiblePreview) {
+      return false;
+    }
+
+    const currentBookName = (isBibleLive ? live.content.bible?.book : preview?.content.bible?.book) || state.selectedBook.name;
+    const currentChapter = (isBibleLive ? live.content.bible?.chapter : preview?.content.bible?.chapter) || state.selectedChapter;
+    const currentVerse = (isBibleLive ? live.content.bible?.verse : preview?.content.bible?.verse) || state.selectedVerse;
+
+    const book = BIBLE_BOOKS.find((b) => b.name === currentBookName) || state.selectedBook;
+    const customVerses = state.isCustomVersion ? state.customVersions[state.currentVersion.id]?.verses : undefined;
+
+    let prevChapter = currentChapter;
+    let prevVerse = currentVerse - 1;
+
+    if (prevVerse < 1) {
+      if (currentChapter > 1) {
+        prevChapter = currentChapter - 1;
+        prevVerse = getChapterVerseCount(book.name, prevChapter, customVerses);
+      } else {
+        prevVerse = 1;
+      }
+    }
+
+    const text = getAuthenticVerseText(book.name, prevChapter, prevVerse, customVerses);
+    setState({
+      selectedBook: book,
+      selectedChapter: prevChapter,
+      selectedVerse: prevVerse,
+      activeVerseText: text,
+      searchError: null,
+    });
+
+    const newScene = bibleStore.createBibleScene();
+    if (!newScene) return false;
+
+    if (isBibleLive) {
+      presentationStore.presentSceneDirectly(newScene);
+      if (isBiblePreview) {
+        presentationStore.setPreviewScene(newScene);
+      }
+    } else if (isBiblePreview) {
+      presentationStore.setPreviewScene(newScene);
+    }
+
+    return true;
   },
 };
 

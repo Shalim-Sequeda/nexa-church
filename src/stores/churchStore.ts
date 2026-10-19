@@ -668,6 +668,58 @@ export const churchStore = {
     }
   },
 
+  jumpToChorusScene: (): boolean => {
+    const scenes = state.currentProject.scenes;
+    if (scenes.length === 0) return false;
+    const currentRefId = presentationStore.getSnapshot().liveScene?.id || state.activeSceneId;
+    const currentIndex = scenes.findIndex((s) => s.id === currentRefId);
+
+    const chorusScenes = scenes
+      .map((sc, idx) => ({ sc, idx }))
+      .filter(({ sc }) => {
+        if (sc.type !== 'song') return false;
+        const s = sc.content.song;
+        return (
+          s?.sectionType === 'chorus' ||
+          (s?.sectionLabel && s.sectionLabel.toLowerCase().includes('coro')) ||
+          sc.title.toLowerCase().includes('coro')
+        );
+      });
+
+    if (chorusScenes.length === 0) return false;
+
+    const nextChorus = chorusScenes.find(({ idx }) => idx > currentIndex);
+    const target = nextChorus ? nextChorus.sc : chorusScenes[0].sc;
+
+    setState({ activeSceneId: target.id });
+    presentationStore.setPreviewScene(target);
+    presentationStore.presentPreview();
+    return true;
+  },
+
+  jumpToVerseScene: (stanzaNum: number): boolean => {
+    const scenes = state.currentProject.scenes;
+    if (scenes.length === 0) return false;
+
+    const target = scenes.find((sc) => {
+      if (sc.type !== 'song') return false;
+      const s = sc.content.song;
+      const label = (s?.sectionLabel || sc.title).toLowerCase();
+      return (
+        (s?.sectionType === 'verse' && label.includes(String(stanzaNum))) ||
+        label.includes(`estrofa ${stanzaNum}`) ||
+        label.includes(`verso ${stanzaNum}`)
+      );
+    });
+
+    if (!target) return false;
+
+    setState({ activeSceneId: target.id });
+    presentationStore.setPreviewScene(target);
+    presentationStore.presentPreview();
+    return true;
+  },
+
   // Gestión y personalización del Evento / Proyecto
   setProjectName: (name: string) => {
     setState((prev) => ({

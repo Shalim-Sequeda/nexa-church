@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react';
-import { ChurchSong, SongSection, Scene } from '../types/church';
+import { ChurchSong, SongSection, Scene, SongSlideMeta } from '../types/church';
 import { loadSavedSongs, saveSong as tauriSaveSong, deleteSong as tauriDeleteSong } from '../services/tauri';
 import { presentationStore } from './presentationStore';
 import { churchStore } from './churchStore';
@@ -10,6 +10,7 @@ export interface SongStoreState {
   searchQuery: string;
   selectedTag: string | null;
   isEditorOpen: boolean;
+  isCreatingNew: boolean;
   editingSong: ChurchSong | null;
   isImporterOpen: boolean;
   isLoading: boolean;
@@ -26,6 +27,7 @@ export const PRESET_WORSHIP_SONGS: ChurchSong[] = [
     timeSignature: '4/4',
     tags: ['Adoración', 'Grandeza', 'Alabanza'],
     theme: {
+      backgroundImageUrl: '/backgrounds/worship/worship_golden_sanctuary.jpg',
       fontFamily: "'Montserrat', sans-serif",
       fontSize: 44,
       textColor: '#FFFFFF',
@@ -87,6 +89,7 @@ export const PRESET_WORSHIP_SONGS: ChurchSong[] = [
     timeSignature: '4/4',
     tags: ['Adoración', 'Rendición'],
     theme: {
+      backgroundImageUrl: '/backgrounds/worship/worship_celestial_indigo.jpg',
       fontFamily: "'Montserrat', sans-serif",
       fontSize: 44,
       textColor: '#FFFFFF',
@@ -148,6 +151,7 @@ export const PRESET_WORSHIP_SONGS: ChurchSong[] = [
     timeSignature: '4/4',
     tags: ['Alabanza', 'Exaltación', 'Avivamiento'],
     theme: {
+      backgroundImageUrl: '/backgrounds/worship/worship_ambient_blue.jpg',
       fontFamily: "'Montserrat', sans-serif",
       fontSize: 44,
       textColor: '#FFFFFF',
@@ -1009,6 +1013,7 @@ const initialState: SongStoreState = {
   searchQuery: '',
   selectedTag: null,
   isEditorOpen: false,
+  isCreatingNew: false,
   editingSong: null,
   isImporterOpen: false,
   isLoading: true,
@@ -1046,9 +1051,26 @@ export const songStore = {
     try {
       const diskSongs = await loadSavedSongs();
       if (diskSongs && diskSongs.length > 0) {
+        // Enriquecer canciones de disco con fondos de adoración predeterminados si carecen de uno
+        const presetBgMap = new Map(PRESET_WORSHIP_SONGS.map((p) => [p.id, p.theme?.backgroundImageUrl]));
+        const enrichedDiskSongs = diskSongs.map((s, idx) => {
+          if (!s.theme?.backgroundImageUrl) {
+            const presetBg = presetBgMap.get(s.id);
+            const fallbackBg = presetBg || (idx % 2 === 0 ? '/backgrounds/worship/worship_ambient_blue.jpg' : '/backgrounds/worship/worship_golden_sanctuary.jpg');
+            return {
+              ...s,
+              theme: {
+                ...(s.theme || {}),
+                backgroundImageUrl: fallbackBg,
+              },
+            };
+          }
+          return s;
+        });
+
         // Fusionar canciones preinstaladas para que siempre aparezcan las nuevas del cancionero
-        const existingIds = new Set(diskSongs.map((s) => s.id));
-        const merged = [...diskSongs];
+        const existingIds = new Set(enrichedDiskSongs.map((s) => s.id));
+        const merged = [...enrichedDiskSongs];
         const toSave: ChurchSong[] = [];
         for (const p of PRESET_WORSHIP_SONGS) {
           if (!existingIds.has(p.id)) {
@@ -1089,6 +1111,338 @@ export const songStore = {
     setState({ selectedSongId: id });
   },
 
+  selectSong: (song: ChurchSong | null, autoPreview: boolean = true) => {
+    if (song) {
+      const exists = state.songs.some((s) => s.id === song.id);
+      const updatedSongs = exists ? state.songs : [...state.songs, song];
+      setState({ selectedSongId: song.id, songs: updatedSongs });
+    } else {
+      setState({ selectedSongId: null });
+    }
+    if (song && autoPreview) {
+      songStore.previewSong(song, undefined, undefined, 0);
+    }
+  },
+
+  jumpToSelectedSongChorus: (): boolean => {
+    const songId = state.selectedSongId;
+    if (!songId) return false;
+    const song = state.songs.find((s) => s.id === songId);
+    if (!song) return false;
+
+    const arr = song.arrangements.find((a) => a.id === (song.defaultArrangementId || song.arrangements[0]?.id)) || song.arrangements[0];
+    const sequence = arr?.sequence || song.sections.map((s) => s.id);
+    const secMap = new Map(song.sections.map((s) => [s.id, s]));
+
+    const chorusIndices: number[] = [];
+    let currentIndex = 0;
+
+    for (const secId of sequence) {
+      const sec = secMap.get(secId);
+      if (sec) {
+        const isPreChorus = sec.type === 'pre-chorus' || sec.label.toLowerCase().includes('pre-coro') || sec.label.toLowerCase().includes('precoro');
+        const isChorus = !isPreChorus && (sec.type === 'chorus' || sec.label.toLowerCase().includes('coro') || sec.label.toLowerCase().includes('chorus'));
+        if (isChorus) {
+          for (let i = 0; i < sec.slides.length; i++) {
+            chorusIndices.push(currentIndex + i);
+          }
+        }
+        currentIndex += sec.slides.length;
+      }
+    }
+
+    if (chorusIndices.length === 0) return false;
+
+    // Detectar diapositiva activa en preview o live para ciclar inteligentemente
+    const live = presentationStore.getSnapshot().liveScene;
+    const preview = presentationStore.getSnapshot().previewScene;
+    const activeSlide =
+      (live?.type === 'song' && live.content?.song?.songId === song.id)
+        ? (live.content.song.activeSlideIndex ?? -1)
+        : (preview?.type === 'song' && preview.content?.song?.songId === song.id)
+        ? (preview.content.song.activeSlideIndex ?? -1)
+        : -1;
+
+    let targetIndex = chorusIndices[0];
+    const posInChorus = chorusIndices.indexOf(activeSlide);
+    if (posInChorus >= 0) {
+      targetIndex = chorusIndices[(posInChorus + 1) % chorusIndices.length];
+    }
+
+    const isThisSongLive = live?.type === 'song' && live.content?.song?.songId === song.id;
+    const isThisSongPreview = preview?.type === 'song' && preview.content?.song?.songId === song.id;
+
+    if (isThisSongLive) {
+      presentationStore.jumpToSongSlide(targetIndex);
+      if (isThisSongPreview) {
+        songStore.previewSong(song, undefined, undefined, targetIndex);
+      }
+    } else {
+      songStore.previewSong(song, undefined, undefined, targetIndex);
+    }
+    return true;
+  },
+
+  jumpToSelectedSongPreChorus: (): boolean => {
+    const songId = state.selectedSongId;
+    if (!songId) return false;
+    const song = state.songs.find((s) => s.id === songId);
+    if (!song) return false;
+
+    const arr = song.arrangements.find((a) => a.id === (song.defaultArrangementId || song.arrangements[0]?.id)) || song.arrangements[0];
+    const sequence = arr?.sequence || song.sections.map((s) => s.id);
+    const secMap = new Map(song.sections.map((s) => [s.id, s]));
+
+    const preChorusIndices: number[] = [];
+    let currentIndex = 0;
+
+    for (const secId of sequence) {
+      const sec = secMap.get(secId);
+      if (sec) {
+        const isPre = sec.type === 'pre-chorus' || sec.label.toLowerCase().includes('pre-coro') || sec.label.toLowerCase().includes('precoro');
+        if (isPre) {
+          for (let i = 0; i < sec.slides.length; i++) {
+            preChorusIndices.push(currentIndex + i);
+          }
+        }
+        currentIndex += sec.slides.length;
+      }
+    }
+
+    if (preChorusIndices.length === 0) return false;
+
+    const live = presentationStore.getSnapshot().liveScene;
+    const preview = presentationStore.getSnapshot().previewScene;
+    const activeSlide =
+      (live?.type === 'song' && live.content?.song?.songId === song.id)
+        ? (live.content.song.activeSlideIndex ?? -1)
+        : (preview?.type === 'song' && preview.content?.song?.songId === song.id)
+        ? (preview.content.song.activeSlideIndex ?? -1)
+        : -1;
+
+    let targetIndex = preChorusIndices[0];
+    const posInPre = preChorusIndices.indexOf(activeSlide);
+    if (posInPre >= 0) {
+      targetIndex = preChorusIndices[(posInPre + 1) % preChorusIndices.length];
+    }
+
+    const isThisSongLive = live?.type === 'song' && live.content?.song?.songId === song.id;
+    const isThisSongPreview = preview?.type === 'song' && preview.content?.song?.songId === song.id;
+
+    if (isThisSongLive) {
+      presentationStore.jumpToSongSlide(targetIndex);
+      if (isThisSongPreview) {
+        songStore.previewSong(song, undefined, undefined, targetIndex);
+      }
+    } else {
+      songStore.previewSong(song, undefined, undefined, targetIndex);
+    }
+    return true;
+  },
+
+  jumpToSelectedSongVerse: (stanzaNum: number): boolean => {
+    const songId = state.selectedSongId;
+    if (!songId) return false;
+    const song = state.songs.find((s) => s.id === songId);
+    if (!song) return false;
+
+    const arr = song.arrangements.find((a) => a.id === (song.defaultArrangementId || song.arrangements[0]?.id)) || song.arrangements[0];
+    const sequence = arr?.sequence || song.sections.map((s) => s.id);
+    const secMap = new Map(song.sections.map((s) => [s.id, s]));
+
+    const verseIndices: number[] = [];
+    let currentIndex = 0;
+
+    for (const secId of sequence) {
+      const sec = secMap.get(secId);
+      if (sec) {
+        const numMatch = sec.label.match(/\d+/);
+        const matchNum = numMatch ? parseInt(numMatch[0], 10) : undefined;
+        const isMatch =
+          (sec.type === 'verse' && matchNum === stanzaNum) ||
+          sec.label.toLowerCase().includes(`estrofa ${stanzaNum}`) ||
+          sec.label.toLowerCase().includes(`verso ${stanzaNum}`);
+
+        if (isMatch) {
+          for (let i = 0; i < sec.slides.length; i++) {
+            verseIndices.push(currentIndex + i);
+          }
+        }
+        currentIndex += sec.slides.length;
+      }
+    }
+
+    if (verseIndices.length === 0) return false;
+
+    const live = presentationStore.getSnapshot().liveScene;
+    const preview = presentationStore.getSnapshot().previewScene;
+    const activeSlide =
+      (live?.type === 'song' && live.content?.song?.songId === song.id)
+        ? (live.content.song.activeSlideIndex ?? -1)
+        : (preview?.type === 'song' && preview.content?.song?.songId === song.id)
+        ? (preview.content.song.activeSlideIndex ?? -1)
+        : -1;
+
+    let targetIndex = verseIndices[0];
+    const posInVerse = verseIndices.indexOf(activeSlide);
+    if (posInVerse >= 0) {
+      targetIndex = verseIndices[(posInVerse + 1) % verseIndices.length];
+    }
+
+    const isThisSongLive = live?.type === 'song' && live.content?.song?.songId === song.id;
+    const isThisSongPreview = preview?.type === 'song' && preview.content?.song?.songId === song.id;
+
+    if (isThisSongLive) {
+      presentationStore.jumpToSongSlide(targetIndex);
+      if (isThisSongPreview) {
+        songStore.previewSong(song, undefined, undefined, targetIndex);
+      }
+    } else {
+      songStore.previewSong(song, undefined, undefined, targetIndex);
+    }
+    return true;
+  },
+
+  jumpToSelectedSongBridge: (): boolean => {
+    const songId = state.selectedSongId;
+    if (!songId) return false;
+    const song = state.songs.find((s) => s.id === songId);
+    if (!song) return false;
+
+    const arr = song.arrangements.find((a) => a.id === (song.defaultArrangementId || song.arrangements[0]?.id)) || song.arrangements[0];
+    const sequence = arr?.sequence || song.sections.map((s) => s.id);
+    const secMap = new Map(song.sections.map((s) => [s.id, s]));
+
+    const bridgeIndices: number[] = [];
+    let currentIndex = 0;
+
+    for (const secId of sequence) {
+      const sec = secMap.get(secId);
+      if (sec) {
+        const isBridge = sec.type === 'bridge' || sec.label.toLowerCase().includes('puente');
+        if (isBridge) {
+          for (let i = 0; i < sec.slides.length; i++) {
+            bridgeIndices.push(currentIndex + i);
+          }
+        }
+        currentIndex += sec.slides.length;
+      }
+    }
+
+    if (bridgeIndices.length === 0) return false;
+
+    const live = presentationStore.getSnapshot().liveScene;
+    const preview = presentationStore.getSnapshot().previewScene;
+    const activeSlide =
+      (live?.type === 'song' && live.content?.song?.songId === song.id)
+        ? (live.content.song.activeSlideIndex ?? -1)
+        : (preview?.type === 'song' && preview.content?.song?.songId === song.id)
+        ? (preview.content.song.activeSlideIndex ?? -1)
+        : -1;
+
+    let targetIndex = bridgeIndices[0];
+    const posInBridge = bridgeIndices.indexOf(activeSlide);
+    if (posInBridge >= 0) {
+      targetIndex = bridgeIndices[(posInBridge + 1) % bridgeIndices.length];
+    }
+
+    const isThisSongLive = live?.type === 'song' && live.content?.song?.songId === song.id;
+    const isThisSongPreview = preview?.type === 'song' && preview.content?.song?.songId === song.id;
+
+    if (isThisSongLive) {
+      presentationStore.jumpToSongSlide(targetIndex);
+      if (isThisSongPreview) {
+        songStore.previewSong(song, undefined, undefined, targetIndex);
+      }
+    } else {
+      songStore.previewSong(song, undefined, undefined, targetIndex);
+    }
+    return true;
+  },
+
+  nextSelectedSongSlide: (): boolean => {
+    const songId = state.selectedSongId;
+    if (!songId) return false;
+    const song = state.songs.find((s) => s.id === songId);
+    if (!song) return false;
+
+    const live = presentationStore.getSnapshot().liveScene;
+    const preview = presentationStore.getSnapshot().previewScene;
+
+    const isThisSongLive = live?.type === 'song' && live.content?.song?.songId === song.id;
+    const isThisSongPreview = preview?.type === 'song' && preview.content?.song?.songId === song.id;
+
+    if (isThisSongLive) {
+      return presentationStore.nextSongSlide();
+    }
+    if (isThisSongPreview && preview?.content?.song) {
+      const nextIdx = preview.content.song.activeSlideIndex + 1;
+      if (nextIdx < preview.content.song.slides.length) {
+        songStore.previewSong(song, undefined, undefined, nextIdx);
+        return true;
+      }
+    }
+    return false;
+  },
+
+  previousSelectedSongSlide: (): boolean => {
+    const songId = state.selectedSongId;
+    if (!songId) return false;
+    const song = state.songs.find((s) => s.id === songId);
+    if (!song) return false;
+
+    const live = presentationStore.getSnapshot().liveScene;
+    const preview = presentationStore.getSnapshot().previewScene;
+
+    const isThisSongLive = live?.type === 'song' && live.content?.song?.songId === song.id;
+    const isThisSongPreview = preview?.type === 'song' && preview.content?.song?.songId === song.id;
+
+    if (isThisSongLive) {
+      return presentationStore.previousSongSlide();
+    }
+    if (isThisSongPreview && preview?.content?.song) {
+      const prevIdx = preview.content.song.activeSlideIndex - 1;
+      if (prevIdx >= 0) {
+        songStore.previewSong(song, undefined, undefined, prevIdx);
+        return true;
+      }
+    }
+    return false;
+  },
+
+  setSongBackground: (songId: string, backgroundImageUrl: string) => {
+    const song = state.songs.find((s) => s.id === songId);
+    if (song) {
+      const updatedTheme = {
+        ...(song.theme || {}),
+        backgroundImageUrl,
+      };
+      const updatedSong: ChurchSong = {
+        ...song,
+        theme: updatedTheme,
+        updatedAt: new Date().toISOString(),
+      };
+      songStore.saveSong(updatedSong);
+    }
+
+    // Regla de aislamiento estricto: Solo actualizar PREVIEW si la escena actual en PREVIEW es ESTA MISMA canción
+    const prev = presentationStore.getSnapshot().previewScene;
+    if (prev?.type === 'song' && prev.content?.song?.songId === songId) {
+      presentationStore.setPreviewScene({
+        ...prev,
+        style: {
+          ...prev.style,
+          backgroundImageUrl,
+        },
+      });
+    }
+
+    // REGLA CRÍTICA DE EMISIÓN:
+    // Configurar o cambiar un fondo desde la biblioteca/cancionero es una operación de preparación/edición.
+    // NUNCA altera LIVE directamente. Lo que está proyectándose al público se mantiene 100% inmutable
+    // hasta que el operador decida explícitamente ejecutar 'En Vivo' / 'Take'.
+  },
+
   openEditorForCreate: () => {
     const newSong: ChurchSong = {
       id: `song-${Date.now()}`,
@@ -1100,46 +1454,32 @@ export const songStore = {
       timeSignature: '4/4',
       tags: ['Alabanza'],
       theme: {
-        fontFamily: "'Montserrat', sans-serif",
-        fontSize: 44,
+        backgroundImageUrl: '/backgrounds/worship/worship_ambient_blue.jpg',
+        fontFamily: "'Segoe UI Variable', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+        fontSize: 46,
         textColor: '#FFFFFF',
-        backgroundColor: '#0B0F19',
+        backgroundColor: '#090A0E',
         textAlign: 'center',
       },
-      sections: [
-        {
-          id: `sec-${Date.now()}-1`,
-          type: 'verse',
-          label: 'Estrofa 1',
-          slides: [''],
-        },
-        {
-          id: `sec-${Date.now()}-2`,
-          type: 'chorus',
-          label: 'Coro',
-          slides: [''],
-        },
-      ],
-      arrangements: [
-        {
-          id: `arr-${Date.now()}-std`,
-          name: 'Estándar',
-          sequence: [`sec-${Date.now()}-1`, `sec-${Date.now()}-2`],
-        },
-      ],
-      defaultArrangementId: `arr-${Date.now()}-std`,
+      sections: [],
+      arrangements: [],
+      defaultArrangementId: '',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    setState({ isEditorOpen: true, editingSong: newSong });
+    setState({ isEditorOpen: true, isCreatingNew: true, editingSong: newSong });
   },
 
   openEditorForEdit: (song: ChurchSong) => {
-    setState({ isEditorOpen: true, editingSong: JSON.parse(JSON.stringify(song)) });
+    setState({
+      isEditorOpen: true,
+      isCreatingNew: false,
+      editingSong: JSON.parse(JSON.stringify(song)),
+    });
   },
 
   closeEditor: () => {
-    setState({ isEditorOpen: false, editingSong: null });
+    setState({ isEditorOpen: false, isCreatingNew: false, editingSong: null });
   },
 
   openImporter: () => {
@@ -1201,11 +1541,10 @@ export const songStore = {
   },
 
   /**
-   * Agrega la canción al culto/proyecto actual como Cues de producción organizados.
-   * Si asSingleCue es falso (por defecto), agrega cada sección del arreglo como un cue independiente
-   * con sus diapositivas y etiquetas claras, permitiendo navegación ágil por chip.
+   * Agrega la canción al culto/proyecto actual como un Cue consolidado de producción (asSingleCue: true por defecto).
+   * Contiene todas las diapositivas y permite saltos internos directos (C para Coro, 1-9 para Estrofas).
    */
-  addSongToProject: (song: ChurchSong, arrangementId?: string, asSingleCue: boolean = false) => {
+  addSongToProject: (song: ChurchSong, arrangementId?: string, asSingleCue: boolean = true) => {
     const arr = song.arrangements.find((a) => a.id === (arrangementId || song.defaultArrangementId)) || song.arrangements[0];
     const sequence = arr?.sequence || song.sections.map((s) => s.id);
 
@@ -1236,7 +1575,7 @@ export const songStore = {
           fontFamily: song.theme?.fontFamily || "'Montserrat', sans-serif",
           textColor: song.theme?.textColor || '#F8FAFC',
           backgroundColor: song.theme?.backgroundColor || '#0B0F19',
-          backgroundImageUrl: song.theme?.backgroundImageUrl,
+          backgroundImageUrl: song.theme?.backgroundImageUrl || '/backgrounds/worship/worship_ambient_blue.jpg',
           textAlign: song.theme?.textAlign || 'center',
           textShadow: true,
           fontWeight: 'medium' as const,
@@ -1271,7 +1610,7 @@ export const songStore = {
             fontFamily: song.theme?.fontFamily || "'Montserrat', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
             textColor: song.theme?.textColor || '#FFFFFF',
             backgroundColor: song.theme?.backgroundColor || '#0B0F19',
-            backgroundImageUrl: song.theme?.backgroundImageUrl,
+            backgroundImageUrl: song.theme?.backgroundImageUrl || '/backgrounds/worship/worship_ambient_blue.jpg',
             textAlign: song.theme?.textAlign || 'center',
             textShadow: true,
             fontWeight: 'bold' as const,
@@ -1302,13 +1641,23 @@ export const songStore = {
    */
   previewSong: (song: ChurchSong, arrangementId?: string, sectionId?: string, slideIndex: number = 0) => {
     let slides: string[] = [];
+    let slidesMeta: SongSlideMeta[] = [];
     let sectionLabel: string | undefined;
 
     if (sectionId) {
       const sec = song.sections.find((s) => s.id === sectionId);
       if (sec) {
-        slides = sec.slides;
+        slides = [...sec.slides];
         sectionLabel = sec.label;
+        const numMatch = sec.label.match(/\d+/);
+        const stanzaNumber = numMatch ? parseInt(numMatch[0], 10) : undefined;
+        slidesMeta = sec.slides.map((_, idx) => ({
+          index: idx,
+          sectionId: sec.id,
+          sectionType: sec.type,
+          sectionLabel: sec.label,
+          stanzaNumber,
+        }));
       }
     } else {
       const arr = song.arrangements.find((a) => a.id === (arrangementId || song.defaultArrangementId)) || song.arrangements[0];
@@ -1316,7 +1665,20 @@ export const songStore = {
       const secMap = new Map(song.sections.map((s) => [s.id, s]));
       for (const id of sequence) {
         const s = secMap.get(id);
-        if (s) slides.push(...s.slides);
+        if (s) {
+          const numMatch = s.label.match(/\d+/);
+          const stanzaNumber = numMatch ? parseInt(numMatch[0], 10) : undefined;
+          for (const slide of s.slides) {
+            slidesMeta.push({
+              index: slides.length,
+              sectionId: s.id,
+              sectionType: s.type,
+              sectionLabel: s.label,
+              stanzaNumber,
+            });
+            slides.push(slide);
+          }
+        }
       }
     }
 
@@ -1334,7 +1696,7 @@ export const songStore = {
         fontFamily: song.theme?.fontFamily || "'Montserrat', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
         textColor: song.theme?.textColor || '#FFFFFF',
         backgroundColor: song.theme?.backgroundColor || '#0B0F19',
-        backgroundImageUrl: song.theme?.backgroundImageUrl,
+        backgroundImageUrl: song.theme?.backgroundImageUrl || '/backgrounds/worship/worship_ambient_blue.jpg',
         textAlign: song.theme?.textAlign || 'center',
         textShadow: true,
         fontWeight: 'bold' as const,
@@ -1345,6 +1707,7 @@ export const songStore = {
           title: song.title,
           author: song.artist || song.author,
           slides,
+          slidesMeta,
           activeSlideIndex: Math.min(slideIndex, Math.max(0, slides.length - 1)),
           songId: song.id,
           sectionLabel,
@@ -1360,13 +1723,23 @@ export const songStore = {
    */
   presentSongLive: (song: ChurchSong, arrangementId?: string, sectionId?: string, slideIndex: number = 0) => {
     let slides: string[] = [];
+    let slidesMeta: SongSlideMeta[] = [];
     let sectionLabel: string | undefined;
 
     if (sectionId) {
       const sec = song.sections.find((s) => s.id === sectionId);
       if (sec) {
-        slides = sec.slides;
+        slides = [...sec.slides];
         sectionLabel = sec.label;
+        const numMatch = sec.label.match(/\d+/);
+        const stanzaNumber = numMatch ? parseInt(numMatch[0], 10) : undefined;
+        slidesMeta = sec.slides.map((_, idx) => ({
+          index: idx,
+          sectionId: sec.id,
+          sectionType: sec.type,
+          sectionLabel: sec.label,
+          stanzaNumber,
+        }));
       }
     } else {
       const arr = song.arrangements.find((a) => a.id === (arrangementId || song.defaultArrangementId)) || song.arrangements[0];
@@ -1374,7 +1747,20 @@ export const songStore = {
       const secMap = new Map(song.sections.map((s) => [s.id, s]));
       for (const id of sequence) {
         const s = secMap.get(id);
-        if (s) slides.push(...s.slides);
+        if (s) {
+          const numMatch = s.label.match(/\d+/);
+          const stanzaNumber = numMatch ? parseInt(numMatch[0], 10) : undefined;
+          for (const slide of s.slides) {
+            slidesMeta.push({
+              index: slides.length,
+              sectionId: s.id,
+              sectionType: s.type,
+              sectionLabel: s.label,
+              stanzaNumber,
+            });
+            slides.push(slide);
+          }
+        }
       }
     }
 
@@ -1392,7 +1778,7 @@ export const songStore = {
         fontFamily: song.theme?.fontFamily || "'Montserrat', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
         textColor: song.theme?.textColor || '#FFFFFF',
         backgroundColor: song.theme?.backgroundColor || '#0B0F19',
-        backgroundImageUrl: song.theme?.backgroundImageUrl,
+        backgroundImageUrl: song.theme?.backgroundImageUrl || '/backgrounds/worship/worship_ambient_blue.jpg',
         textAlign: song.theme?.textAlign || 'center',
         textShadow: true,
         fontWeight: 'bold' as const,
@@ -1403,6 +1789,7 @@ export const songStore = {
           title: song.title,
           author: song.artist || song.author,
           slides,
+          slidesMeta,
           activeSlideIndex: Math.min(slideIndex, Math.max(0, slides.length - 1)),
           songId: song.id,
           sectionLabel,
