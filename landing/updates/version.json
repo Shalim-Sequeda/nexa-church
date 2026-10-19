@@ -1,8 +1,8 @@
 {
-  "version": "2.1.0",
+  "version": "2.1.1",
   "releaseDate": "2026-10-18",
   "minRequiredVersion": "1.0.0",
-  "downloadUrl": "https://github.com/Shalim-Sequeda/nexa-church/releases/download/v2.1.0/NEXA.Church_2.1.0_x64-setup.exe",
+  "downloadUrl": "https://github.com/Shalim-Sequeda/nexa-church/releases/download/v2.1.1/NEXA.Church_2.1.1_x64-setup.exe",
   "changelog": [
     "Flujo Holyrics de alabanza: Atajo de salto inmediato al Coro con tecla C y salto a Estrofas con teclas 1-9",
     "Navegacion contextual de diapositivas con flechas de direccion y clicadores inalambricos",
