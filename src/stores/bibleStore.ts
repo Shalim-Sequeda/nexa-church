@@ -583,7 +583,9 @@ export const bibleStore = {
 
   selectBackgroundImage: async () => {
     const filePath = await openFileDialog([
-      { name: 'Imágenes y Fondos Animados (*.jpg, *.png, *.webp, *.gif)', extensions: ['jpg', 'jpeg', 'png', 'webp', 'bmp', 'gif'] },
+      { name: 'Fondos y Videos (*.mp4, *.mov, *.webm, *.jpg, *.png, *.webp)', extensions: ['mp4', 'mov', 'webm', 'mkv', 'jpg', 'jpeg', 'png', 'webp', 'gif'] },
+      { name: 'Videos (*.mp4, *.mov, *.webm)', extensions: ['mp4', 'mov', 'webm', 'mkv'] },
+      { name: 'Imágenes (*.jpg, *.png, *.webp, *.gif)', extensions: ['jpg', 'jpeg', 'png', 'webp', 'bmp', 'gif'] },
     ]);
     if (filePath) {
       bibleStore.setBackgroundImage(filePath);

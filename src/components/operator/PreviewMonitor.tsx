@@ -2,7 +2,7 @@ import React from 'react';
 import { Video } from 'lucide-react';
 import { IconEye, IconTake } from '../common/NexaIcons';
 import { usePresentation, presentationStore } from '../../stores/presentationStore';
-import { resolveMediaUrl, handleMediaImageError } from '../../services/tauri';
+import { resolveMediaUrl, handleMediaImageError, isMediaVideo } from '../../services/tauri';
 import { AnnouncementRenderer } from './AnnouncementRenderer';
 import { getBibleDynamicFontSizes, getSongDynamicFontSizes } from '../../utils/bibleTypography';
 
@@ -59,10 +59,22 @@ export const PreviewMonitor: React.FC = () => {
           }`}
           style={{
             backgroundColor: scene?.style?.backgroundColor || (scene ? '#090A0E' : '#050507'),
-            backgroundImage: scene?.style?.backgroundImageUrl ? `url(${resolveMediaUrl(scene.style.backgroundImageUrl)})` : undefined,
+            backgroundImage: (scene?.style?.backgroundImageUrl && !isMediaVideo(scene.style.backgroundImageUrl)) ? `url(${resolveMediaUrl(scene.style.backgroundImageUrl)})` : undefined,
             backgroundSize: 'cover',
           }}
         >
+          {/* Motion Video Background Loop (si el fondo es un archivo de video) */}
+          {scene?.style?.backgroundImageUrl && isMediaVideo(scene.style.backgroundImageUrl) && (
+            <video
+              src={resolveMediaUrl(scene.style.backgroundImageUrl)}
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+          )}
+
           {/* Aspect Ratio Safe Area Marker (discreet studio crosshairs) */}
           <div className="absolute inset-2 border border-white/5 pointer-events-none z-20" />
 
@@ -127,16 +139,24 @@ export const PreviewMonitor: React.FC = () => {
 
             {/* 3. Video */}
             {(scene.type === 'video' || (scene.type === 'song' && scene.content.media?.mediaType === 'video')) && scene.content.media && (
-              <div className="w-full h-full flex flex-col items-center justify-center bg-black/90">
-                <div className="w-8 h-8 bg-[#181818] border border-[#27272A] flex items-center justify-center text-[#E4E4E7] mb-1.5">
-                  <Video className="w-4 h-4" />
+              <div className="w-full h-full relative flex items-center justify-center bg-black">
+                <video
+                  src={resolveMediaUrl(scene.content.media.filePath)}
+                  className="w-full h-full object-contain pointer-events-none"
+                  muted
+                  preload="metadata"
+                />
+                <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center pointer-events-none">
+                  <div className="w-9 h-9 bg-black/80 border border-white/20 rounded-full flex items-center justify-center text-white mb-1.5 shadow-lg">
+                    <Video className="w-4 h-4 text-emerald-400" />
+                  </div>
+                  <span className="text-xs font-semibold text-white truncate max-w-xs px-2.5 py-0.5 bg-black/70 rounded border border-white/10">
+                    {scene.content.media.fileName}
+                  </span>
+                  <span className="text-[10px] text-zinc-300 font-mono mt-1">
+                    Listo para emitir en Live (00:00)
+                  </span>
                 </div>
-                <span className="text-xs font-semibold text-white truncate max-w-xs">
-                  {scene.content.media.fileName}
-                </span>
-                <span className="text-[10px] text-txt-muted mt-0.5">
-                  Listo para iniciar desde 00:00
-                </span>
               </div>
             )}
 

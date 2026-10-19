@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ChurchSong, SongSection, SongSectionType, SongArrangement } from '../../types/church';
 import { songStore, useSongStore } from '../../stores/songStore';
-import { openFileDialog, resolveMediaUrl } from '../../services/tauri';
+import { openFileDialog, resolveMediaUrl, isMediaVideo } from '../../services/tauri';
 import { BACKGROUND_PRESETS } from '../../data/backgroundPresets';
 import { parseSongText, buildChurchSongFromParsed } from '../../utils/songParser';
 import {
@@ -81,6 +81,8 @@ export const SongEditorModal: React.FC = () => {
 
   const handlePickBackground = async () => {
     const file = await openFileDialog([
+      { name: 'Fondos y Videos (*.mp4, *.mov, *.webm, *.jpg, *.png)', extensions: ['mp4', 'mov', 'webm', 'mkv', 'jpg', 'jpeg', 'png', 'webp'] },
+      { name: 'Videos (*.mp4, *.mov, *.webm)', extensions: ['mp4', 'mov', 'webm', 'mkv'] },
       { name: 'Imágenes (*.jpg, *.png, *.webp)', extensions: ['jpg', 'jpeg', 'png', 'webp', 'bmp'] },
     ]);
     if (file) {
@@ -606,11 +608,22 @@ export const SongEditorModal: React.FC = () => {
                     </label>
                     {backgroundImageUrl ? (
                       <div className="relative aspect-video rounded overflow-hidden border border-[#27272A] group">
-                        <img
-                          src={resolveMediaUrl(backgroundImageUrl)}
-                          alt="Fondo seleccionado"
-                          className="w-full h-full object-cover"
-                        />
+                        {isMediaVideo(backgroundImageUrl) ? (
+                          <video
+                            src={resolveMediaUrl(backgroundImageUrl)}
+                            className="w-full h-full object-cover"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                          />
+                        ) : (
+                          <img
+                            src={resolveMediaUrl(backgroundImageUrl)}
+                            alt="Fondo seleccionado"
+                            className="w-full h-full object-cover"
+                          />
+                        )}
                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-1">
                           <button
                             type="button"

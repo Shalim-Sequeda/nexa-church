@@ -74,6 +74,15 @@ export async function loadMediaBlobUrl(filePath: string): Promise<string> {
         else if (ext === 'gif') mimeType = 'image/gif';
         else if (ext === 'svg') mimeType = 'image/svg+xml';
         else if (ext === 'pdf') mimeType = 'application/pdf';
+        else if (ext === 'mp4') mimeType = 'video/mp4';
+        else if (ext === 'webm') mimeType = 'video/webm';
+        else if (ext === 'mov' || ext === 'qt') mimeType = 'video/quicktime';
+        else if (ext === 'm4v') mimeType = 'video/x-m4v';
+        else if (ext === 'mkv') mimeType = 'video/x-matroska';
+        else if (ext === 'mp3') mimeType = 'audio/mpeg';
+        else if (ext === 'wav') mimeType = 'audio/wav';
+        else if (ext === 'ogg') mimeType = 'audio/ogg';
+        else if (ext === 'm4a' || ext === 'aac') mimeType = 'audio/mp4';
       } catch {
         const payload = await invoke<MediaFilePayload>('read_media_file', {
           filePath: trimmed,
@@ -111,6 +120,16 @@ export async function loadMediaBlobUrl(filePath: string): Promise<string> {
 }
 
 /**
+ * Detecta si una ruta corresponde a un formato de video compatible
+ */
+export function isMediaVideo(filePath?: string): boolean {
+  if (!filePath || typeof filePath !== 'string') return false;
+  const clean = filePath.split(/[?#]/)[0].toLowerCase();
+  const ext = clean.split('.').pop() || '';
+  return ['mp4', 'mov', 'm4v', 'webm', 'mkv', 'avi', 'wmv', 'mpg', 'mpeg', 'ts', 'qt'].includes(ext);
+}
+
+/**
  * Limpia y revoca todas las URLs de objeto blob activas para liberar memoria.
  */
 export function clearMediaBlobCache(): void {
@@ -129,6 +148,7 @@ export function clearMediaBlobCache(): void {
  * Soporta de manera transparente:
  * - Caché de blob URLs en memoria si ya fue leído
  * - Rutas completas de Windows (C:\... o C:/...)
+ * - Rutas absolutas de Linux (/home/..., /media/..., etc.)
  * - Protocolo de assets de Tauri (convertFileSrc)
  * - URLs web/blob/data existentes
  */
@@ -137,19 +157,34 @@ export function resolveMediaUrl(filePath: string): string {
   const trimmed = filePath.trim();
   if (!trimmed) return '';
 
-  // 1. Si ya es una URL web, blob, data URL o recurso relativo a la app (/backgrounds/...), no requiere transformación
+  // 1. Si ya es una URL web, blob, data URL o protocolo de assets existente
   if (
     trimmed.startsWith('http://') ||
     trimmed.startsWith('https://') ||
     trimmed.startsWith('blob:') ||
     trimmed.startsWith('data:') ||
-    trimmed.startsWith('asset://') ||
-    trimmed.startsWith('/')
+    trimmed.startsWith('asset://')
   ) {
     return trimmed;
   }
 
-  // 2. Si ya está en la caché de blobs en memoria, retornar la blob URL de inmediato
+  // 2. Recursos web estáticos empaquetados en la carpeta public de la aplicación
+  const isAppPublicAsset = (
+    trimmed.startsWith('/backgrounds/') ||
+    trimmed.startsWith('/assets/') ||
+    trimmed.startsWith('/icons/') ||
+    trimmed.startsWith('/fonts/') ||
+    trimmed.startsWith('/bibles/') ||
+    trimmed.startsWith('/songs/') ||
+    trimmed.startsWith('/audio/') ||
+    trimmed === '/favicon.ico' ||
+    trimmed === '/logo.png'
+  );
+  if (isAppPublicAsset) {
+    return trimmed;
+  }
+
+  // 3. Si ya está en la caché de blobs en memoria, retornar la blob URL de inmediato
   const cached = blobUrlCache.get(trimmed.toLowerCase());
   if (cached) {
     return cached;
@@ -157,7 +192,7 @@ export function resolveMediaUrl(filePath: string): string {
 
   const normalized = trimmed.replace(/\\/g, '/');
 
-  // 3. Si estamos en el entorno Tauri nativo, invocar convertFileSrc
+  // 4. Si estamos en el entorno Tauri nativo, invocar convertFileSrc (funciona para Windows y Linux)
   if (isTauriEnvironment()) {
     try {
       return convertFileSrc(normalized);
@@ -170,7 +205,7 @@ export function resolveMediaUrl(filePath: string): string {
     }
   }
 
-  // 4. Entorno de prueba o navegador web estándar
+  // 5. Entorno de prueba o navegador web estándar
   return normalized;
 }
 

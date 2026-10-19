@@ -1,6 +1,6 @@
 import React from 'react';
 import { Scene } from '../../types/church';
-import { useMediaSrc, handleMediaImageError } from '../../services/tauri';
+import { useMediaSrc, handleMediaImageError, isMediaVideo } from '../../services/tauri';
 import { BookOpen, Film, Megaphone, Music, FileText, Presentation } from 'lucide-react';
 
 interface CueThumbnailProps {
@@ -11,6 +11,7 @@ interface CueThumbnailProps {
 export const CueThumbnail: React.FC<CueThumbnailProps> = React.memo(({ scene, className = 'w-14 h-8' }) => {
   const mediaPath = scene.content.media?.filePath || scene.style.backgroundImageUrl;
   const mediaSrc = useMediaSrc(mediaPath);
+  const isVideo = isMediaVideo(mediaPath);
 
   // 1. Escena de Imagen o con Imagen de Fondo
   if (scene.type === 'image' && mediaSrc) {
@@ -31,10 +32,20 @@ export const CueThumbnail: React.FC<CueThumbnailProps> = React.memo(({ scene, cl
   if (scene.type === 'video') {
     return (
       <div className={`${className} bg-[#0D0D10] rounded-[2px] overflow-hidden shrink-0 border border-[#27272A] relative flex flex-col items-center justify-center p-1 text-center`}>
-        <Film className="w-3.5 h-3.5 text-amber-400 mb-0.5 shrink-0" />
-        <span className="text-[6.5px] font-mono font-bold text-[#E4E4E7] truncate max-w-full leading-none">
-          {scene.content.media?.fileName || scene.title}
-        </span>
+        {mediaSrc && (
+          <video
+            src={mediaSrc}
+            className="absolute inset-0 w-full h-full object-cover opacity-50 pointer-events-none"
+            muted
+            preload="metadata"
+          />
+        )}
+        <div className="relative z-10 flex flex-col items-center justify-center">
+          <Film className="w-3.5 h-3.5 text-amber-400 mb-0.5 shrink-0" />
+          <span className="text-[6.5px] font-mono font-bold text-[#E4E4E7] truncate max-w-full leading-none">
+            {scene.content.media?.fileName || scene.title}
+          </span>
+        </div>
       </div>
     );
   }
@@ -63,7 +74,11 @@ export const CueThumbnail: React.FC<CueThumbnailProps> = React.memo(({ scene, cl
     return (
       <div className={`${className} bg-[#0A0D14] rounded-[2px] overflow-hidden shrink-0 border border-blue-950/60 relative flex flex-col items-center justify-center p-1 text-center`}>
         {mediaSrc ? (
-          <img src={mediaSrc} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+          isVideo ? (
+            <video src={mediaSrc} className="absolute inset-0 w-full h-full object-cover opacity-40 pointer-events-none" muted preload="metadata" />
+          ) : (
+            <img src={mediaSrc} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+          )
         ) : null}
         <div className="relative z-10 flex flex-col items-center">
           <BookOpen className="w-2.5 h-2.5 text-blue-400 mb-0.5 shrink-0" />
@@ -80,7 +95,11 @@ export const CueThumbnail: React.FC<CueThumbnailProps> = React.memo(({ scene, cl
     return (
       <div className={`${className} bg-[#100D14] rounded-[2px] overflow-hidden shrink-0 border border-purple-950/60 relative flex flex-col items-center justify-center p-1 text-center`}>
         {mediaSrc ? (
-          <img src={mediaSrc} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+          isVideo ? (
+            <video src={mediaSrc} className="absolute inset-0 w-full h-full object-cover opacity-40 pointer-events-none" muted preload="metadata" />
+          ) : (
+            <img src={mediaSrc} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+          )
         ) : null}
         <div className="relative z-10 flex flex-col items-center">
           <Music className="w-2.5 h-2.5 text-purple-400 mb-0.5 shrink-0" />
@@ -96,7 +115,11 @@ export const CueThumbnail: React.FC<CueThumbnailProps> = React.memo(({ scene, cl
   return (
     <div className={`${className} bg-[#121214] rounded-[2px] overflow-hidden shrink-0 border border-[#27272A] relative flex flex-col items-center justify-center p-1 text-center`}>
       {mediaSrc ? (
-        <img src={mediaSrc} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+        isVideo ? (
+          <video src={mediaSrc} className="absolute inset-0 w-full h-full object-cover opacity-40 pointer-events-none" muted preload="metadata" />
+        ) : (
+          <img src={mediaSrc} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+        )
       ) : null}
       <div className="relative z-10 flex flex-col items-center">
         {scene.type === 'title' ? (

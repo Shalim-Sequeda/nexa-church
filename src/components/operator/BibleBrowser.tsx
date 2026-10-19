@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useBible, bibleStore } from '../../stores/bibleStore';
 import { BIBLE_BOOKS, getChapterVerseCount, parseBibleReference } from '../../data/bibleData';
-import { resolveMediaUrl } from '../../services/tauri';
+import { resolveMediaUrl, isMediaVideo } from '../../services/tauri';
 import { BACKGROUND_PRESETS, BACKGROUND_CATEGORIES } from '../../data/backgroundPresets';
 
 export const BibleBrowser: React.FC = () => {
@@ -486,11 +486,20 @@ export const BibleBrowser: React.FC = () => {
           <div className="flex items-center gap-2 min-w-0">
             {bible.backgroundImageUrl ? (
               <div className="w-6 h-4 rounded overflow-hidden border border-white/20 shrink-0">
-                <img
-                  src={resolveMediaUrl(bible.backgroundImageUrl)}
-                  alt="Fondo activo"
-                  className="w-full h-full object-cover"
-                />
+                {isMediaVideo(bible.backgroundImageUrl) ? (
+                  <video
+                    src={resolveMediaUrl(bible.backgroundImageUrl)}
+                    className="w-full h-full object-cover"
+                    muted
+                    preload="metadata"
+                  />
+                ) : (
+                  <img
+                    src={resolveMediaUrl(bible.backgroundImageUrl)}
+                    alt="Fondo activo"
+                    className="w-full h-full object-cover"
+                  />
+                )}
               </div>
             ) : (
               <ImageIcon className="w-3.5 h-3.5 text-[#8E92A2] shrink-0" />
@@ -623,11 +632,23 @@ export const BibleBrowser: React.FC = () => {
           className="shrink-0 border border-[#1E2029] rounded p-3.5 flex flex-col gap-3 relative overflow-hidden transition-all shadow-lg"
           style={{
             backgroundColor: bible.backgroundImageUrl ? '#000000' : '#0D0E12',
-            backgroundImage: bible.backgroundImageUrl ? `url(${resolveMediaUrl(bible.backgroundImageUrl)})` : undefined,
+            backgroundImage: (bible.backgroundImageUrl && !isMediaVideo(bible.backgroundImageUrl)) ? `url(${resolveMediaUrl(bible.backgroundImageUrl)})` : undefined,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
         >
+          {/* Fondo de video animado si el fondo activo es un archivo de video */}
+          {bible.backgroundImageUrl && isMediaVideo(bible.backgroundImageUrl) && (
+            <video
+              src={resolveMediaUrl(bible.backgroundImageUrl)}
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+          )}
+
           {/* Overlay oscuro para legibilidad si hay fondo */}
           {bible.backgroundImageUrl && (
             <div className="absolute inset-0 bg-black/60 pointer-events-none z-0" />

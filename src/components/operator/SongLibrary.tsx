@@ -177,6 +177,8 @@ export const SongLibrary: React.FC = () => {
   const handlePickCustomBackground = async () => {
     if (!selectedSong) return;
     const file = await openFileDialog([
+      { name: 'Fondos y Videos (*.mp4, *.mov, *.webm, *.jpg, *.png)', extensions: ['mp4', 'mov', 'webm', 'mkv', 'jpg', 'jpeg', 'png', 'webp'] },
+      { name: 'Videos (*.mp4, *.mov, *.webm)', extensions: ['mp4', 'mov', 'webm', 'mkv'] },
       { name: 'Imágenes (*.jpg, *.png, *.webp)', extensions: ['jpg', 'jpeg', 'png', 'webp', 'bmp'] },
     ]);
     if (file) {

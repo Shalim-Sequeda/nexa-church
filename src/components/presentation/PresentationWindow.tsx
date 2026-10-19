@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Scene, PresentationSyncMessage } from '../../types/church';
-import { resolveMediaUrl, handleMediaImageError } from '../../services/tauri';
+import { resolveMediaUrl, handleMediaImageError, isMediaVideo } from '../../services/tauri';
 import { emitChurchMessage, listenChurchMessage } from '../../services/events';
 import { AnnouncementRenderer } from '../operator/AnnouncementRenderer';
 import { getBibleDynamicFontSizes, getSongDynamicFontSizes } from '../../utils/bibleTypography';
@@ -163,6 +163,23 @@ export const PresentationWindow: React.FC = () => {
     };
   }, []);
 
+  // Efecto reactivo para garantizar la reproducción de video al montar o cambiar de escena
+  useEffect(() => {
+    const isVideo = liveScene?.type === 'video' || (liveScene?.type === 'song' && liveScene.content.media?.mediaType === 'video');
+    const filePath = liveScene?.content.media?.filePath || liveScene?.content.song?.mediaPath;
+
+    if (isVideo && filePath && videoRef.current) {
+      const targetUrl = resolveMediaUrl(filePath);
+      const vid = videoRef.current;
+      if (vid.src !== targetUrl) {
+        vid.src = targetUrl;
+        vid.currentTime = 0;
+        vid.load();
+      }
+      vid.play().catch((e) => console.log('Video play caught:', e));
+    }
+  }, [liveScene]);
+
   const isHidden = isBlackout || !liveScene || liveScene.type === 'black';
 
   return (
@@ -172,11 +189,23 @@ export const PresentationWindow: React.FC = () => {
       }`}
       style={{
         backgroundColor: (!isHidden && liveScene?.style.backgroundColor) ? liveScene.style.backgroundColor : '#000000',
-        backgroundImage: (!isHidden && liveScene?.style.backgroundImageUrl) ? `url(${resolveMediaUrl(liveScene.style.backgroundImageUrl)})` : undefined,
+        backgroundImage: (!isHidden && liveScene?.style.backgroundImageUrl && !isMediaVideo(liveScene.style.backgroundImageUrl)) ? `url(${resolveMediaUrl(liveScene.style.backgroundImageUrl)})` : undefined,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
+      {/* Fondo de video animado / motion loop detrás de textos (si el fondo es un archivo de video) */}
+      {!isHidden && liveScene?.style.backgroundImageUrl && isMediaVideo(liveScene.style.backgroundImageUrl) && (
+        <video
+          src={resolveMediaUrl(liveScene.style.backgroundImageUrl)}
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+      )}
+
       {!isHidden && liveScene && (() => {
         const { style, content, type } = liveScene;
         return (
@@ -246,7 +275,8 @@ export const PresentationWindow: React.FC = () => {
       {(type === 'video' || (type === 'song' && content.media?.mediaType === 'video')) && content.media && (
         <video
           ref={videoRef}
-          className="w-full h-full object-contain bg-black"
+          src={resolveMediaUrl(content.media.filePath)}
+          className="w-full h-full object-contain bg-black relative z-10"
           playsInline
           autoPlay
           preload="auto"

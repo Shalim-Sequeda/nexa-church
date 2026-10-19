@@ -160,7 +160,7 @@ export const MediaLibrary: React.FC = () => {
               className="group px-2 py-1.5 bg-transparent hover:bg-[#121212] rounded-none transition-all flex items-center justify-between gap-2 select-none"
             >
               <div className="flex items-center gap-2 min-w-0 flex-1">
-                <div className="w-12 h-8 rounded bg-[#181818] border border-[#27272A] flex items-center justify-center shrink-0 overflow-hidden shadow-sm">
+                <div className="w-12 h-8 rounded bg-[#181818] border border-[#27272A] flex items-center justify-center shrink-0 overflow-hidden shadow-sm relative">
                   {item.media_type === 'image' || item.extension.toLowerCase() === 'gif' ? (
                     <img
                       src={resolveMediaUrl(item.path)}
@@ -172,6 +172,16 @@ export const MediaLibrary: React.FC = () => {
                         handleMediaImageError(e, item.path);
                       }}
                     />
+                  ) : item.media_type === 'video' ? (
+                    <div className="w-full h-full relative flex items-center justify-center bg-black">
+                      <video
+                        src={resolveMediaUrl(item.path)}
+                        className="w-full h-full object-cover pointer-events-none opacity-60"
+                        muted
+                        preload="metadata"
+                      />
+                      <Film className="w-3.5 h-3.5 text-amber-400 absolute z-10 drop-shadow" />
+                    </div>
                   ) : (
                     renderIcon(item.media_type, item.extension)
                   )}

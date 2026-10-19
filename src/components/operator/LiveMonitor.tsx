@@ -1,7 +1,7 @@
 import React from 'react';
 import { IconLive, IconBlackout } from '../common/NexaIcons';
 import { usePresentation, presentationStore } from '../../stores/presentationStore';
-import { resolveMediaUrl, handleMediaImageError } from '../../services/tauri';
+import { resolveMediaUrl, handleMediaImageError, isMediaVideo } from '../../services/tauri';
 import { AnnouncementRenderer } from './AnnouncementRenderer';
 import { getBibleDynamicFontSizes, getSongDynamicFontSizes } from '../../utils/bibleTypography';
 
@@ -63,10 +63,22 @@ export const LiveMonitor: React.FC = () => {
           }`}
           style={{
             backgroundColor: scene?.style?.backgroundColor || (scene ? '#000000' : '#050507'),
-            backgroundImage: scene?.style?.backgroundImageUrl ? `url(${resolveMediaUrl(scene.style.backgroundImageUrl)})` : undefined,
+            backgroundImage: (scene?.style?.backgroundImageUrl && !isMediaVideo(scene.style.backgroundImageUrl)) ? `url(${resolveMediaUrl(scene.style.backgroundImageUrl)})` : undefined,
             backgroundSize: 'cover',
           }}
         >
+          {/* Motion Video Background Loop (si el fondo es un archivo de video) */}
+          {scene?.style?.backgroundImageUrl && isMediaVideo(scene.style.backgroundImageUrl) && !isBlackout && (
+            <video
+              src={resolveMediaUrl(scene.style.backgroundImageUrl)}
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+          )}
+
           {/* Aspect Ratio Safe Area Marker */}
           <div className="absolute inset-2 border border-white/5 pointer-events-none z-20" />
 
@@ -152,16 +164,19 @@ export const LiveMonitor: React.FC = () => {
 
               {/* 3. Video */}
               {(scene.type === 'video' || (scene.type === 'song' && scene.content.media?.mediaType === 'video')) && scene.content.media && (
-                <div className="w-full h-full flex flex-col items-center justify-center bg-black">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="w-2 h-2 rounded-full bg-tally-live animate-ping" />
-                    <span className="text-[10px] font-mono font-black text-tally-live uppercase tracking-widest">
-                      EMISIÓN DE VIDEO EN CURSO
-                    </span>
+                <div className="w-full h-full relative flex items-center justify-center bg-black">
+                  <video
+                    src={resolveMediaUrl(scene.content.media.filePath)}
+                    className="w-full h-full object-contain"
+                    autoPlay
+                    loop={scene.content.media.loop ?? true}
+                    muted
+                    playsInline
+                  />
+                  <div className="absolute bottom-2 left-2 flex items-center gap-1.5 px-2 py-0.5 bg-black/80 backdrop-blur border border-white/10 rounded text-[9px] font-mono text-white/90 z-20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                    <span className="truncate max-w-[160px] font-medium">{scene.content.media.fileName}</span>
                   </div>
-                  <span className="text-xs font-semibold text-white truncate max-w-xs">
-                    {scene.content.media.fileName}
-                  </span>
                 </div>
               )}
 
