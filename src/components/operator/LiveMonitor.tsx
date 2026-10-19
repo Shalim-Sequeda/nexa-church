@@ -170,7 +170,7 @@ export const LiveMonitor: React.FC = () => {
                     className="w-full h-full object-contain"
                     autoPlay
                     loop={scene.content.media.loop ?? true}
-                    muted
+                    muted={presentation.presentationWindowOpen}
                     playsInline
                   />
                   <div className="absolute bottom-2 left-2 flex items-center gap-1.5 px-2 py-0.5 bg-black/80 backdrop-blur border border-white/10 rounded text-[9px] font-mono text-white/90 z-20">

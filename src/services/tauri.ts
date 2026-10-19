@@ -9,6 +9,26 @@ export function isTauriEnvironment(): boolean {
   return typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
 }
 
+export function isLinuxPlatform(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  const ua = navigator.userAgent || '';
+  const platform = (navigator as any).userAgentData?.platform || navigator.platform || '';
+  return /linux/i.test(ua) || /linux/i.test(platform);
+}
+
+let broadcastServerPort = 5210;
+if (typeof window !== 'undefined') {
+  setTimeout(() => {
+    getBroadcastServerInfo()
+      .then((info) => {
+        if (info && info.port) {
+          broadcastServerPort = info.port;
+        }
+      })
+      .catch(() => {});
+  }, 50);
+}
+
 interface MediaFilePayload {
   mime_type: string;
   base64_data: string;
@@ -124,9 +144,59 @@ export async function loadMediaBlobUrl(filePath: string): Promise<string> {
  */
 export function isMediaVideo(filePath?: string): boolean {
   if (!filePath || typeof filePath !== 'string') return false;
-  const clean = filePath.split(/[?#]/)[0].toLowerCase();
+  let target = filePath;
+  if (target.includes('file=')) {
+    const match = target.match(/[?&]file=([^&]+)/);
+    if (match && match[1]) {
+      try {
+        target = decodeURIComponent(match[1]);
+      } catch {
+        target = match[1];
+      }
+    }
+  } else if (target.includes('path=')) {
+    const match = target.match(/[?&]path=([^&]+)/);
+    if (match && match[1]) {
+      try {
+        target = decodeURIComponent(match[1]);
+      } catch {
+        target = match[1];
+      }
+    }
+  }
+  const clean = target.split(/[?#]/)[0].toLowerCase();
   const ext = clean.split('.').pop() || '';
   return ['mp4', 'mov', 'm4v', 'webm', 'mkv', 'avi', 'wmv', 'mpg', 'mpeg', 'ts', 'qt'].includes(ext);
+}
+
+/**
+ * Detecta si una ruta corresponde a un formato de audio compatible
+ */
+export function isMediaAudio(filePath?: string): boolean {
+  if (!filePath || typeof filePath !== 'string') return false;
+  let target = filePath;
+  if (target.includes('file=')) {
+    const match = target.match(/[?&]file=([^&]+)/);
+    if (match && match[1]) {
+      try {
+        target = decodeURIComponent(match[1]);
+      } catch {
+        target = match[1];
+      }
+    }
+  } else if (target.includes('path=')) {
+    const match = target.match(/[?&]path=([^&]+)/);
+    if (match && match[1]) {
+      try {
+        target = decodeURIComponent(match[1]);
+      } catch {
+        target = match[1];
+      }
+    }
+  }
+  const clean = target.split(/[?#]/)[0].toLowerCase();
+  const ext = clean.split('.').pop() || '';
+  return ['mp3', 'wav', 'ogg', 'flac', 'm4a', 'aac', 'wma'].includes(ext);
 }
 
 /**
@@ -149,7 +219,8 @@ export function clearMediaBlobCache(): void {
  * - Caché de blob URLs en memoria si ya fue leído
  * - Rutas completas de Windows (C:\... o C:/...)
  * - Rutas absolutas de Linux (/home/..., /media/..., etc.)
- * - Protocolo de assets de Tauri (convertFileSrc)
+ * - Streaming HTTP con Range requests (206 Partial Content) para Linux
+ * - Protocolo de assets de Tauri (convertFileSrc) para Windows
  * - URLs web/blob/data existentes
  */
 export function resolveMediaUrl(filePath: string): string {
@@ -192,8 +263,19 @@ export function resolveMediaUrl(filePath: string): string {
 
   const normalized = trimmed.replace(/\\/g, '/');
 
-  // 4. Si estamos en el entorno Tauri nativo, invocar convertFileSrc (funciona para Windows y Linux)
+  // 4. Si estamos en el entorno Tauri nativo
   if (isTauriEnvironment()) {
+    // EN LINUX:
+    // WebKitGTK y GStreamer requieren streaming HTTP con Range requests (HTTP 206 Partial Content)
+    // para reproducir audio y video. El protocolo personalizado asset:// falla en WebKitGTK.
+    // Usamos el servidor local integrado de streaming de alto rendimiento.
+    if (isLinuxPlatform()) {
+      return `http://127.0.0.1:${broadcastServerPort}/media?file=${encodeURIComponent(trimmed)}`;
+    }
+
+    // EN WINDOWS:
+    // WebView2 funciona perfectamente con convertFileSrc nativo.
+    // Mantenemos 100% el comportamiento original intacto sin tocar nada.
     try {
       return convertFileSrc(normalized);
     } catch {

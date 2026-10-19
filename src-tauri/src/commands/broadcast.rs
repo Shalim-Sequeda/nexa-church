@@ -202,6 +202,14 @@ pub fn start_broadcast_server(app_handle: AppHandle) {
                 continue;
             }
 
+            if path.starts_with("/media") {
+                let cors_hdr = cors_header.clone();
+                thread::spawn(move || {
+                    handle_media_stream(request, &cors_hdr);
+                });
+                continue;
+            }
+
             // Default route or /remote
             let html = get_remote_control_html();
             let header_ct = Header::from_bytes(&b"Content-Type"[..], &b"text/html; charset=utf-8"[..]).unwrap();
@@ -746,4 +754,206 @@ fn get_remote_control_html() -> &'static str {
   </script>
 </body>
 </html>"#
+}
+
+fn url_decode(s: &str) -> String {
+    let mut result = Vec::new();
+    let bytes = s.as_bytes();
+    let mut i = 0;
+    while i < bytes.len() {
+        if bytes[i] == b'%' && i + 2 < bytes.len() {
+            if let Ok(val) = u8::from_str_radix(std::str::from_utf8(&bytes[i + 1..i + 3]).unwrap_or(""), 16) {
+                result.push(val);
+                i += 3;
+                continue;
+            }
+        } else if bytes[i] == b'+' {
+            result.push(b' ');
+            i += 1;
+            continue;
+        }
+        result.push(bytes[i]);
+        i += 1;
+    }
+    String::from_utf8_lossy(&result).to_string()
+}
+
+fn get_mime_type(path: &str) -> &'static str {
+    let lower = path.to_lowercase();
+    if lower.ends_with(".mp4") { "video/mp4" }
+    else if lower.ends_with(".webm") { "video/webm" }
+    else if lower.ends_with(".mov") || lower.ends_with(".qt") { "video/quicktime" }
+    else if lower.ends_with(".mkv") { "video/x-matroska" }
+    else if lower.ends_with(".m4v") { "video/x-m4v" }
+    else if lower.ends_with(".avi") { "video/x-msvideo" }
+    else if lower.ends_with(".mp3") { "audio/mpeg" }
+    else if lower.ends_with(".wav") { "audio/wav" }
+    else if lower.ends_with(".ogg") { "audio/ogg" }
+    else if lower.ends_with(".m4a") || lower.ends_with(".aac") { "audio/mp4" }
+    else if lower.ends_with(".flac") { "audio/flac" }
+    else if lower.ends_with(".jpg") || lower.ends_with(".jpeg") { "image/jpeg" }
+    else if lower.ends_with(".png") { "image/png" }
+    else if lower.ends_with(".webp") { "image/webp" }
+    else if lower.ends_with(".gif") { "image/gif" }
+    else { "application/octet-stream" }
+}
+
+fn handle_media_stream(request: tiny_http::Request, cors_header: &Header) {
+    use std::fs::File;
+    use std::io::{Read, Seek, SeekFrom};
+    use std::path::Path;
+
+    let url_str = request.url().to_string();
+    let query_param = if let Some(idx) = url_str.find("file=") {
+        &url_str[idx + 5..]
+    } else if let Some(idx) = url_str.find("path=") {
+        &url_str[idx + 5..]
+    } else {
+        ""
+    };
+
+    let raw_param = query_param.split('&').next().unwrap_or("");
+    let file_path = url_decode(raw_param);
+    let trimmed = file_path.trim();
+    let mut clean_path = if trimmed.starts_with("file://") {
+        trimmed.strip_prefix("file://").unwrap_or(trimmed).to_string()
+    } else {
+        trimmed.to_string()
+    };
+    if clean_path.starts_with('/') && clean_path.chars().nth(2) == Some(':') {
+        clean_path.remove(0);
+    }
+
+    if clean_path.is_empty() || !Path::new(&clean_path).exists() {
+        let _ = request.respond(
+            Response::from_string("File not found")
+                .with_status_code(StatusCode(404))
+                .with_header(cors_header.clone()),
+        );
+        return;
+    }
+
+    let mut file = match File::open(&clean_path) {
+        Ok(f) => f,
+        Err(_) => {
+            let _ = request.respond(
+                Response::from_string("Error opening file")
+                    .with_status_code(StatusCode(500))
+                    .with_header(cors_header.clone()),
+            );
+            return;
+        }
+    };
+
+    let total_size = match file.metadata() {
+        Ok(m) => m.len(),
+        Err(_) => 0,
+    };
+
+    let mime_type = get_mime_type(&clean_path);
+    let content_type_header = Header::from_bytes(&b"Content-Type"[..], mime_type.as_bytes()).unwrap();
+    let accept_ranges_header = Header::from_bytes(&b"Accept-Ranges"[..], &b"bytes"[..]).unwrap();
+    let cors_expose = Header::from_bytes(
+        &b"Access-Control-Expose-Headers"[..],
+        &b"Content-Range, Content-Length, Accept-Ranges"[..],
+    ).unwrap();
+
+    let is_head = *request.method() == Method::Head;
+
+    // Check for Range header: e.g. "Range: bytes=0-1024" or "Range: bytes=1024-"
+    let range_header = request
+        .headers()
+        .iter()
+        .find(|h| h.field.equiv("Range"))
+        .map(|h| h.value.as_str().to_string());
+
+    if let Some(range_val) = range_header {
+        if let Some(bytes_range) = range_val.strip_prefix("bytes=") {
+            let mut parts = bytes_range.split('-');
+            let start: u64 = parts.next().and_then(|s| s.parse().ok()).unwrap_or(0);
+            let end: u64 = parts
+                .next()
+                .and_then(|s| if s.is_empty() { None } else { s.parse().ok() })
+                .unwrap_or(total_size.saturating_sub(1));
+
+            let end = end.min(total_size.saturating_sub(1));
+
+            if start <= end && start < total_size {
+                let length = end - start + 1;
+                let content_range_str = format!("bytes {}-{}/{}", start, end, total_size);
+                let content_range_header = Header::from_bytes(
+                    &b"Content-Range"[..],
+                    content_range_str.as_bytes(),
+                ).unwrap();
+                let content_len_header = Header::from_bytes(
+                    &b"Content-Length"[..],
+                    length.to_string().as_bytes(),
+                ).unwrap();
+
+                if is_head {
+                    let response = Response::empty(StatusCode(206))
+                        .with_header(cors_header.clone())
+                        .with_header(cors_expose)
+                        .with_header(content_type_header)
+                        .with_header(accept_ranges_header)
+                        .with_header(content_range_header)
+                        .with_header(content_len_header);
+                    let _ = request.respond(response);
+                    return;
+                }
+
+                if file.seek(SeekFrom::Start(start)).is_ok() {
+                    let reader = file.take(length);
+                    let response = Response::new(
+                        StatusCode(206),
+                        vec![
+                            cors_header.clone(),
+                            cors_expose,
+                            content_type_header,
+                            accept_ranges_header,
+                            content_range_header,
+                            content_len_header,
+                        ],
+                        reader,
+                        Some(length as usize),
+                        None,
+                    );
+                    let _ = request.respond(response);
+                    return;
+                }
+            }
+        }
+    }
+
+    // Full response (no range or range invalid)
+    let content_len_header = Header::from_bytes(
+        &b"Content-Length"[..],
+        total_size.to_string().as_bytes(),
+    ).unwrap();
+
+    if is_head {
+        let response = Response::empty(StatusCode(200))
+            .with_header(cors_header.clone())
+            .with_header(cors_expose)
+            .with_header(content_type_header)
+            .with_header(accept_ranges_header)
+            .with_header(content_len_header);
+        let _ = request.respond(response);
+        return;
+    }
+
+    let response = Response::new(
+        StatusCode(200),
+        vec![
+            cors_header.clone(),
+            cors_expose,
+            content_type_header,
+            accept_ranges_header,
+            content_len_header,
+        ],
+        file,
+        Some(total_size as usize),
+        None,
+    );
+    let _ = request.respond(response);
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   IconCues,
   IconBible,
@@ -30,6 +30,9 @@ import { AboutModal } from './AboutModal';
 import { EventEditorModal } from './EventEditorModal';
 import { UnsavedChangesModal } from './UnsavedChangesModal';
 import { BroadcastModal } from './BroadcastModal';
+import { usePresentation } from '../../stores/presentationStore';
+import { resolveMediaUrl } from '../../services/tauri';
+import { emitChurchMessage } from '../../services/events';
 
 export type RailTab = 'cues' | 'canciones' | 'biblia' | 'media' | 'anuncios' | 'pantallas' | 'audio' | 'ajustes';
 
@@ -39,6 +42,51 @@ export const ControlRoom: React.FC = () => {
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [showEventEditorModal, setShowEventEditorModal] = useState(false);
   const [showBroadcastModal, setShowBroadcastModal] = useState(false);
+
+  const presentation = usePresentation();
+  const localAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // Si la ventana de proyector externa está abierta, ella tiene el control exclusivo del audio
+    if (presentation.presentationWindowOpen) {
+      if (localAudioRef.current) {
+        localAudioRef.current.pause();
+        localAudioRef.current.src = '';
+      }
+      return;
+    }
+
+    const audioEl = localAudioRef.current;
+    if (!audioEl) return;
+
+    if (
+      presentation.backgroundAudio &&
+      presentation.mediaPlayback.isPlaying &&
+      presentation.currentAudioSource === 'background'
+    ) {
+      const targetUrl = resolveMediaUrl(presentation.backgroundAudio.filePath);
+      if (audioEl.src !== targetUrl) {
+        audioEl.src = targetUrl;
+        audioEl.currentTime = presentation.mediaPlayback.currentTime || 0;
+        audioEl.load();
+      }
+      audioEl.volume = presentation.mediaPlayback.isMuted ? 0 : presentation.mediaPlayback.volume;
+      audioEl.playbackRate = presentation.mediaPlayback.speed || 1;
+      audioEl.play().catch((err) => console.log('Local operator audio play caught:', err));
+    } else {
+      if (!audioEl.paused) {
+        audioEl.pause();
+      }
+    }
+  }, [
+    presentation.presentationWindowOpen,
+    presentation.backgroundAudio,
+    presentation.mediaPlayback.isPlaying,
+    presentation.mediaPlayback.volume,
+    presentation.mediaPlayback.isMuted,
+    presentation.mediaPlayback.speed,
+    presentation.currentAudioSource,
+  ]);
 
   const railNavItems: { id: RailTab; label: string; icon: React.FC<{ className?: string }> }[] = [
     { id: 'cues', label: 'CUES', icon: IconCues },
@@ -158,6 +206,62 @@ export const ControlRoom: React.FC = () => {
       />
 
       <UnsavedChangesModal />
+
+      {/* Reproductor de audio local para cabina y ensayo en pantalla única cuando el proyector no está activo */}
+      <audio
+        ref={localAudioRef}
+        className="hidden"
+        onTimeUpdate={(e) => {
+          if (presentation.presentationWindowOpen) return;
+          const el = e.currentTarget;
+          emitChurchMessage({
+            type: 'MEDIA_STATE_UPDATE',
+            channel: 'audio',
+            mediaLoadId: presentation.mediaLoadId,
+            currentTime: el.currentTime,
+            duration: isNaN(el.duration) ? 0 : el.duration,
+            isPlaying: !el.paused && !el.ended,
+            volume: el.volume,
+            speed: el.playbackRate,
+            isMuted: el.muted || el.volume === 0,
+            ended: el.ended,
+            activeMediaId: presentation.backgroundAudio?.filePath || null,
+          });
+        }}
+        onLoadedMetadata={(e) => {
+          if (presentation.presentationWindowOpen) return;
+          const el = e.currentTarget;
+          emitChurchMessage({
+            type: 'MEDIA_STATE_UPDATE',
+            channel: 'audio',
+            mediaLoadId: presentation.mediaLoadId,
+            currentTime: el.currentTime,
+            duration: isNaN(el.duration) ? 0 : el.duration,
+            isPlaying: !el.paused && !el.ended,
+            volume: el.volume,
+            speed: el.playbackRate,
+            isMuted: el.muted || el.volume === 0,
+            ended: el.ended,
+            activeMediaId: presentation.backgroundAudio?.filePath || null,
+          });
+        }}
+        onEnded={() => {
+          if (presentation.presentationWindowOpen) return;
+          emitChurchMessage({
+            type: 'MEDIA_STATE_UPDATE',
+            channel: 'audio',
+            mediaLoadId: presentation.mediaLoadId,
+            currentTime: 0,
+            duration: 0,
+            isPlaying: false,
+            volume: 1,
+            speed: 1,
+            isMuted: false,
+            ended: true,
+            activeMediaId: null,
+          });
+        }}
+      />
     </div>
   );
 };
